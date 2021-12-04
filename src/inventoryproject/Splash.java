@@ -38,14 +38,14 @@ public class Splash extends javax.swing.JFrame {
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
         jLabel1.setFont(new java.awt.Font("Century Gothic", 1, 24)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(204, 0, 0));
+        jLabel1.setForeground(new java.awt.Color(204, 0, 51));
         jLabel1.setText("QueryLabs Inventory System");
 
-        jLabel2.setIcon(new javax.swing.ImageIcon("C:\\Users\\Osida\\Desktop\\inventoryProject\\icons8-database-100.png")); // NOI18N
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/icons8-database-100.png"))); // NOI18N
         jLabel2.setText("jLabel2");
 
         jLabel3.setFont(new java.awt.Font("Century Gothic", 1, 24)); // NOI18N
-        jLabel3.setForeground(new java.awt.Color(204, 0, 0));
+        jLabel3.setForeground(new java.awt.Color(204, 0, 51));
         jLabel3.setText("%");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
