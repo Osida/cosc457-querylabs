@@ -47,7 +47,7 @@ public class Login extends javax.swing.JFrame {
         jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/icons8-inventory-64.png"))); // NOI18N
 
         jTextField2.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
-        jTextField2.setText("jTextField1");
+        jTextField2.setToolTipText("Username");
         jTextField2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField2ActionPerformed(evt);
@@ -55,7 +55,7 @@ public class Login extends javax.swing.JFrame {
         });
 
         jTextField1.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
-        jTextField1.setText("jTextField1");
+        jTextField1.setToolTipText("Password");
         jTextField1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextField1ActionPerformed(evt);
