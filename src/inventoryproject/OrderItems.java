@@ -27,7 +27,8 @@ public class OrderItems extends javax.swing.JFrame {
     public OrderItems() {
         initComponents();
         SelectAllFromOrderItems();
-
+        SelectFromProducts();
+        SelectFromOrders();
     }
 
     Connection con = null;
@@ -46,11 +47,10 @@ public class OrderItems extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
-        jLabel11 = new javax.swing.JLabel();
-        jLabel12 = new javax.swing.JLabel();
         ExitBtn = new javax.swing.JLabel();
+        jLabel28 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        OrderItemTable = new javax.swing.JTable();
+        OrdersList = new javax.swing.JTable();
         jLabel14 = new javax.swing.JLabel();
         OrderItemQty = new javax.swing.JTextField();
         jLabel15 = new javax.swing.JLabel();
@@ -61,26 +61,22 @@ public class OrderItems extends javax.swing.JFrame {
         HomeBtn = new javax.swing.JButton();
         UpdateBtn = new javax.swing.JButton();
         DeleteBtn = new javax.swing.JButton();
-        OrderID = new javax.swing.JTextField();
+        OrderItemOrderID = new javax.swing.JTextField();
         jLabel17 = new javax.swing.JLabel();
-        ProductID = new javax.swing.JTextField();
+        OrderItemProductID = new javax.swing.JTextField();
         jLabel18 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        OrderItemTable = new javax.swing.JTable();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        ProductList = new javax.swing.JTable();
+        jLabel19 = new javax.swing.JLabel();
+        jLabel20 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
         jPanel5.setBackground(new java.awt.Color(204, 0, 51));
-
-        jLabel11.setBackground(new java.awt.Color(255, 255, 255));
-        jLabel11.setFont(new java.awt.Font("Century Gothic", 1, 18)); // NOI18N
-        jLabel11.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel11.setText("Inventory Mangement System");
-
-        jLabel12.setBackground(new java.awt.Color(255, 255, 255));
-        jLabel12.setFont(new java.awt.Font("Century Gothic", 1, 18)); // NOI18N
-        jLabel12.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel12.setText("Manage Ordered Items");
 
         ExitBtn.setFont(new java.awt.Font("Century Gothic", 0, 20)); // NOI18N
         ExitBtn.setForeground(new java.awt.Color(255, 255, 255));
@@ -91,15 +87,18 @@ public class OrderItems extends javax.swing.JFrame {
             }
         });
 
+        jLabel28.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel28.setFont(new java.awt.Font("Century Gothic", 1, 24)); // NOI18N
+        jLabel28.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel28.setText("Manage Order Items");
+
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGap(435, 435, 435)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel11)
-                    .addComponent(jLabel12))
+                .addGap(443, 443, 443)
+                .addComponent(jLabel28)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(ExitBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -107,36 +106,33 @@ public class OrderItems extends javax.swing.JFrame {
         jPanel5Layout.setVerticalGroup(
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGap(12, 12, 12)
-                        .addComponent(jLabel11)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel12))
-                    .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(ExitBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(15, Short.MAX_VALUE))
+                .addContainerGap()
+                .addComponent(ExitBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                .addContainerGap(26, Short.MAX_VALUE)
+                .addComponent(jLabel28)
+                .addGap(24, 24, 24))
         );
 
-        OrderItemTable.setModel(new javax.swing.table.DefaultTableModel(
+        OrdersList.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "id", "product_id", "qty", "unit_price", "total_price"
+                "id", "vendor_id", "order_status"
             }
         ));
-        OrderItemTable.addMouseListener(new java.awt.event.MouseAdapter() {
+        OrdersList.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                OrderItemTableMouseClicked(evt);
+                OrdersListMouseClicked(evt);
             }
         });
-        jScrollPane1.setViewportView(OrderItemTable);
+        jScrollPane1.setViewportView(OrdersList);
 
         jLabel14.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
         jLabel14.setForeground(new java.awt.Color(204, 0, 51));
-        jLabel14.setText("Quantity");
+        jLabel14.setText("Quantity *");
 
         OrderItemQty.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
         OrderItemQty.addActionListener(new java.awt.event.ActionListener() {
@@ -147,7 +143,7 @@ public class OrderItems extends javax.swing.JFrame {
 
         jLabel15.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
         jLabel15.setForeground(new java.awt.Color(204, 0, 51));
-        jLabel15.setText("Unit Price");
+        jLabel15.setText("Unit Price *");
 
         OrderItemPrice.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
         OrderItemPrice.addActionListener(new java.awt.event.ActionListener() {
@@ -158,7 +154,7 @@ public class OrderItems extends javax.swing.JFrame {
 
         jLabel16.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
         jLabel16.setForeground(new java.awt.Color(204, 0, 51));
-        jLabel16.setText("Total Price");
+        jLabel16.setText("Total Price *");
 
         OrderItemTotal.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
         OrderItemTotal.addActionListener(new java.awt.event.ActionListener() {
@@ -226,27 +222,65 @@ public class OrderItems extends javax.swing.JFrame {
             }
         });
 
-        OrderID.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
-        OrderID.addActionListener(new java.awt.event.ActionListener() {
+        OrderItemOrderID.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
+        OrderItemOrderID.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                OrderIDActionPerformed(evt);
+                OrderItemOrderIDActionPerformed(evt);
             }
         });
 
         jLabel17.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
         jLabel17.setForeground(new java.awt.Color(204, 0, 51));
-        jLabel17.setText("Order ID");
+        jLabel17.setText("Order ID *");
 
-        ProductID.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
-        ProductID.addActionListener(new java.awt.event.ActionListener() {
+        OrderItemProductID.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
+        OrderItemProductID.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ProductIDActionPerformed(evt);
+                OrderItemProductIDActionPerformed(evt);
             }
         });
 
         jLabel18.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
         jLabel18.setForeground(new java.awt.Color(204, 0, 51));
-        jLabel18.setText("Product ID");
+        jLabel18.setText("Product ID *");
+
+        OrderItemTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "order_id", "product_id", "qty", "unit_price", "total_price"
+            }
+        ));
+        OrderItemTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                OrderItemTableMouseClicked(evt);
+            }
+        });
+        jScrollPane2.setViewportView(OrderItemTable);
+
+        ProductList.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "id", "qty", "price"
+            }
+        ));
+        ProductList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                ProductListMouseClicked(evt);
+            }
+        });
+        jScrollPane3.setViewportView(ProductList);
+
+        jLabel19.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
+        jLabel19.setForeground(new java.awt.Color(204, 0, 51));
+        jLabel19.setText("Order List");
+
+        jLabel20.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
+        jLabel20.setForeground(new java.awt.Color(204, 0, 51));
+        jLabel20.setText("Product List");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -274,35 +308,43 @@ public class OrderItems extends javax.swing.JFrame {
                     .addComponent(OrderItemTotal)
                     .addComponent(OrderItemPrice)
                     .addComponent(OrderItemQty)
-                    .addComponent(ProductID)
-                    .addComponent(OrderID))
-                .addGap(49, 49, 49)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 701, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(66, 66, 66))
+                    .addComponent(OrderItemProductID)
+                    .addComponent(OrderItemOrderID))
+                .addGap(37, 37, 37)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 355, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel20))
+                .addGap(70, 70, 70)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel19)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 337, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(17, 17, 17))
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                    .addContainerGap(387, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 768, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGap(12, 12, 12)))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGap(66, 66, 66)
+                .addComponent(jLabel17)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(OrderItemOrderID, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(9, 9, 9)
+                .addComponent(jLabel18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(OrderItemProductID, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel14)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(OrderItemQty, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel15)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(66, 66, 66)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(62, 62, 62)
-                        .addComponent(jLabel17)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(OrderID, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel18)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(ProductID, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel14)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(OrderItemQty, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel15)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(OrderItemPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -315,8 +357,23 @@ public class OrderItems extends javax.swing.JFrame {
                             .addComponent(DeleteBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(CreateBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(HomeBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(92, Short.MAX_VALUE))
+                        .addComponent(HomeBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel19, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel20, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(16, 16, 16))))
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createSequentialGroup()
+                    .addGap(125, 125, 125)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 239, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap(306, Short.MAX_VALUE)))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -357,8 +414,8 @@ public class OrderItems extends javax.swing.JFrame {
             MyConnection create = new MyConnection();
             con = create.getRegisterConnection();
             PreparedStatement pstmt = con.prepareStatement(query);
-            pstmt.setInt(1, Integer.valueOf(OrderID.getText()));
-            pstmt.setInt(2, Integer.valueOf(ProductID.getText()));
+            pstmt.setInt(1, Integer.valueOf(OrderItemOrderID.getText()));
+            pstmt.setInt(2, Integer.valueOf(OrderItemProductID.getText()));
             pstmt.setInt(3, Integer.valueOf(OrderItemQty.getText()));
             pstmt.setFloat(4, Float.valueOf(OrderItemPrice.getText()));
             pstmt.setFloat(5, Float.valueOf(OrderItemTotal.getText()));
@@ -366,8 +423,8 @@ public class OrderItems extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Order item successfully created.");
             con.close();
             SelectAllFromOrderItems();
-            OrderID.setText("");
-            ProductID.setText("");
+            OrderItemOrderID.setText("");
+            OrderItemProductID.setText("");
             OrderItemQty.setText("");
             OrderItemPrice.setText("");
             OrderItemTotal.setText("");
@@ -394,15 +451,15 @@ public class OrderItems extends javax.swing.JFrame {
 
     private void UpdateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_UpdateBtnActionPerformed
         // TODO add your handling code here:
-        if (OrderID.getText().isEmpty() || ProductID.getText().isEmpty() || OrderItemQty.getText().isEmpty() || OrderItemPrice.getText().isEmpty() || OrderItemTotal.getText().isEmpty()) {
+        if (OrderItemOrderID.getText().isEmpty() || OrderItemProductID.getText().isEmpty() || OrderItemQty.getText().isEmpty() || OrderItemPrice.getText().isEmpty() || OrderItemTotal.getText().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Missing information.");
         } else {
             try {
                 int qty = Integer.valueOf(OrderItemQty.getText());
                 float unit_price = Float.valueOf(OrderItemPrice.getText());
                 float total_price = Float.valueOf(OrderItemTotal.getText());
-                int order_id = Integer.valueOf(OrderID.getText());
-                int product_id = Integer.valueOf(ProductID.getText());
+                int order_id = Integer.valueOf(OrderItemOrderID.getText());
+                int product_id = Integer.valueOf(OrderItemProductID.getText());
                 query = String.format("UPDATE order_items SET qty=%d, unit_price=%.2f, total_price=%.2f WHERE order_id=%d AND product_id=%d", qty, unit_price, total_price, order_id, product_id);
                 MyConnection updateDB = new MyConnection();
                 con = updateDB.getRegisterConnection();
@@ -410,8 +467,8 @@ public class OrderItems extends javax.swing.JFrame {
                 St.executeUpdate(query);
                 JOptionPane.showMessageDialog(this, "Order item updated successfully.");
                 SelectAllFromOrderItems();
-                OrderID.setText("");
-                ProductID.setText("");
+                OrderItemOrderID.setText("");
+                OrderItemProductID.setText("");
                 OrderItemQty.setText("");
                 OrderItemPrice.setText("");
                 OrderItemTotal.setText("");
@@ -423,12 +480,12 @@ public class OrderItems extends javax.swing.JFrame {
 
     private void DeleteBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_DeleteBtnMouseClicked
         // TODO add your handling code here:
-        if (OrderID.getText().isEmpty() || ProductID.getText().isEmpty()) {
+        if (OrderItemOrderID.getText().isEmpty() || OrderItemProductID.getText().isEmpty()) {
             JOptionPane.showMessageDialog(this, "Enter the order id & product id to be deleted.");
         } else {
             try {
-                int orderID = Integer.valueOf(OrderID.getText());
-                int productID = Integer.valueOf(ProductID.getText());
+                int orderID = Integer.valueOf(OrderItemOrderID.getText());
+                int productID = Integer.valueOf(OrderItemProductID.getText());
                 query = String.format("DELETE FROM order_items WHERE order_id=%d AND product_id=%d", orderID, productID);
                 MyConnection deleteByID = new MyConnection();
                 con = deleteByID.getRegisterConnection();
@@ -436,9 +493,9 @@ public class OrderItems extends javax.swing.JFrame {
                 St.executeUpdate(query);
                 SelectAllFromOrderItems();
                 JOptionPane.showMessageDialog(this, "Order item deleted successfully.");
-                DefaultTableModel model = (DefaultTableModel) OrderItemTable.getModel();
-                OrderID.setText("");
-                ProductID.setText("");
+                DefaultTableModel model = (DefaultTableModel) OrdersList.getModel();
+                OrderItemOrderID.setText("");
+                OrderItemProductID.setText("");
                 OrderItemQty.setText("");
                 OrderItemPrice.setText("");
                 OrderItemTotal.setText("");
@@ -452,24 +509,39 @@ public class OrderItems extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_DeleteBtnActionPerformed
 
-    private void OrderIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OrderIDActionPerformed
+    private void OrderItemOrderIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OrderItemOrderIDActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_OrderIDActionPerformed
+    }//GEN-LAST:event_OrderItemOrderIDActionPerformed
 
-    private void ProductIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ProductIDActionPerformed
+    private void OrderItemProductIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OrderItemProductIDActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_ProductIDActionPerformed
+    }//GEN-LAST:event_OrderItemProductIDActionPerformed
+
+    private void OrdersListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_OrdersListMouseClicked
+        // TODO add your handling code here:
+        DefaultTableModel model = (DefaultTableModel) OrdersList.getModel();
+        int Myindex = OrdersList.getSelectedRow();
+        OrderItemOrderID.setText(model.getValueAt(Myindex, 0).toString());
+        OrderItemProductID.setText(model.getValueAt(Myindex, 1).toString());
+        OrderItemQty.setText(model.getValueAt(Myindex, 2).toString());
+        OrderItemPrice.setText(model.getValueAt(Myindex, 3).toString());
+        OrderItemTotal.setText(model.getValueAt(Myindex, 4).toString());
+    }//GEN-LAST:event_OrdersListMouseClicked
 
     private void OrderItemTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_OrderItemTableMouseClicked
         // TODO add your handling code here:
         DefaultTableModel model = (DefaultTableModel) OrderItemTable.getModel();
         int Myindex = OrderItemTable.getSelectedRow();
-        OrderID.setText(model.getValueAt(Myindex, 0).toString());
-        ProductID.setText(model.getValueAt(Myindex, 1).toString());
+        OrderItemOrderID.setText(model.getValueAt(Myindex, 0).toString());
+        OrderItemProductID.setText(model.getValueAt(Myindex, 1).toString());
         OrderItemQty.setText(model.getValueAt(Myindex, 2).toString());
         OrderItemPrice.setText(model.getValueAt(Myindex, 3).toString());
         OrderItemTotal.setText(model.getValueAt(Myindex, 4).toString());
     }//GEN-LAST:event_OrderItemTableMouseClicked
+
+    private void ProductListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ProductListMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_ProductListMouseClicked
 
     public void SelectAllFromOrderItems() {
         try {
@@ -481,6 +553,32 @@ public class OrderItems extends javax.swing.JFrame {
             OrderItemTable.setModel(DbUtils.resultSetToTableModel(RS));
         } catch (SQLException ex) {
             Logger.getLogger(Vendor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void SelectFromProducts() {
+        try {
+            query = "SELECT id, qty, price FROM products";
+            MyConnection select = new MyConnection();
+            con = select.getRegisterConnection();
+            St = con.createStatement();
+            RS = St.executeQuery(query);
+            ProductList.setModel(DbUtils.resultSetToTableModel(RS));
+        } catch (SQLException ex) {
+            Logger.getLogger(OrderItems.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void SelectFromOrders() {
+        try {
+            query = "SELECT id, vendor_id, order_status FROM mry.orders";
+            MyConnection select = new MyConnection();
+            con = select.getRegisterConnection();
+            St = con.createStatement();
+            RS = St.executeQuery(query);
+            OrdersList.setModel(DbUtils.resultSetToTableModel(RS));
+        } catch (SQLException ex) {
+            Logger.getLogger(OrderItems.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -525,22 +623,27 @@ public class OrderItems extends javax.swing.JFrame {
     private javax.swing.JButton DeleteBtn;
     private javax.swing.JLabel ExitBtn;
     private javax.swing.JButton HomeBtn;
-    private javax.swing.JTextField OrderID;
+    private javax.swing.JTextField OrderItemOrderID;
     private javax.swing.JTextField OrderItemPrice;
+    private javax.swing.JTextField OrderItemProductID;
     private javax.swing.JTextField OrderItemQty;
     private javax.swing.JTable OrderItemTable;
     private javax.swing.JTextField OrderItemTotal;
-    private javax.swing.JTextField ProductID;
+    private javax.swing.JTable OrdersList;
+    private javax.swing.JTable ProductList;
     private javax.swing.JButton UpdateBtn;
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel19;
+    private javax.swing.JLabel jLabel20;
+    private javax.swing.JLabel jLabel28;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     // End of variables declaration//GEN-END:variables
 }

@@ -48,7 +48,6 @@ public class Vendor extends javax.swing.JFrame {
         VenTable = new javax.swing.JTable();
         jPanel7 = new javax.swing.JPanel();
         jPanel11 = new javax.swing.JPanel();
-        jLabel27 = new javax.swing.JLabel();
         jLabel28 = new javax.swing.JLabel();
         ExitBtn5 = new javax.swing.JLabel();
         VendorDeleteID = new javax.swing.JTextField();
@@ -101,13 +100,8 @@ public class Vendor extends javax.swing.JFrame {
 
         jPanel11.setBackground(new java.awt.Color(204, 0, 51));
 
-        jLabel27.setBackground(new java.awt.Color(255, 255, 255));
-        jLabel27.setFont(new java.awt.Font("Century Gothic", 1, 18)); // NOI18N
-        jLabel27.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel27.setText("Inventory Mangement System");
-
         jLabel28.setBackground(new java.awt.Color(255, 255, 255));
-        jLabel28.setFont(new java.awt.Font("Century Gothic", 1, 18)); // NOI18N
+        jLabel28.setFont(new java.awt.Font("Century Gothic", 1, 24)); // NOI18N
         jLabel28.setForeground(new java.awt.Color(255, 255, 255));
         jLabel28.setText("Manage Vendors");
 
@@ -125,13 +119,8 @@ public class Vendor extends javax.swing.JFrame {
         jPanel11Layout.setHorizontalGroup(
             jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel11Layout.createSequentialGroup()
-                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel11Layout.createSequentialGroup()
-                        .addGap(435, 435, 435)
-                        .addComponent(jLabel27))
-                    .addGroup(jPanel11Layout.createSequentialGroup()
-                        .addGap(485, 485, 485)
-                        .addComponent(jLabel28)))
+                .addGap(483, 483, 483)
+                .addComponent(jLabel28)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(ExitBtn5, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(28, 28, 28))
@@ -140,13 +129,10 @@ public class Vendor extends javax.swing.JFrame {
             jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel11Layout.createSequentialGroup()
                 .addGap(12, 12, 12)
-                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(ExitBtn5, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel11Layout.createSequentialGroup()
-                        .addComponent(jLabel27)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel28)))
-                .addContainerGap(15, Short.MAX_VALUE))
+                .addGroup(jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel28)
+                    .addComponent(ExitBtn5, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(30, Short.MAX_VALUE))
         );
 
         VendorDeleteID.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
@@ -162,7 +148,7 @@ public class Vendor extends javax.swing.JFrame {
 
         jLabel30.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
         jLabel30.setForeground(new java.awt.Color(204, 0, 51));
-        jLabel30.setText("Product Sold");
+        jLabel30.setText("Product Sold *");
 
         VendorItem.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
         VendorItem.addActionListener(new java.awt.event.ActionListener() {
@@ -184,7 +170,7 @@ public class Vendor extends javax.swing.JFrame {
 
         jLabel33.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
         jLabel33.setForeground(new java.awt.Color(204, 0, 51));
-        jLabel33.setText("Address");
+        jLabel33.setText("Address *");
 
         HomeBtn.setBackground(new java.awt.Color(204, 0, 51));
         HomeBtn.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
@@ -238,7 +224,7 @@ public class Vendor extends javax.swing.JFrame {
 
         jLabel34.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
         jLabel34.setForeground(new java.awt.Color(204, 0, 51));
-        jLabel34.setText("Product Name");
+        jLabel34.setText("Product Name *");
 
         CreateBtn1.setBackground(new java.awt.Color(204, 0, 51));
         CreateBtn1.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
@@ -515,7 +501,6 @@ public class Vendor extends javax.swing.JFrame {
     private javax.swing.JTextField VendorItem;
     private javax.swing.JTextField VendorName;
     private javax.swing.JTextField VendorPhone;
-    private javax.swing.JLabel jLabel27;
     private javax.swing.JLabel jLabel28;
     private javax.swing.JLabel jLabel29;
     private javax.swing.JLabel jLabel30;

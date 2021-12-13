@@ -321,6 +321,8 @@ public class Category extends javax.swing.JFrame {
             int row = pstmt.executeUpdate();
             JOptionPane.showMessageDialog(this, "Category successfully created.");
             SelectAllFromCat();
+            CatDeleteID.setText("");
+            CatName.setText("");
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(this, "Oops ... " + ex.getMessage());
             System.out.println("SQLException: " + ex.getMessage());
@@ -347,6 +349,8 @@ public class Category extends javax.swing.JFrame {
                 St.executeUpdate(query);
                 JOptionPane.showMessageDialog(this, "Category updated successfully.");
                 SelectAllFromCat();
+                CatDeleteID.setText("");
+                CatName.setText("");
             } catch (SQLException ex) {
                 Logger.getLogger(Category.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -359,8 +363,8 @@ public class Category extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Enter the category id to be deleted.");
         } else {
             try {
-                String ID = CatDeleteID.getText();
-                query = "DELETE FROM categories WHERE id=" + ID;
+                int id = Integer.valueOf(CatDeleteID.getText());
+                query = "DELETE FROM categories WHERE id=" + id;
                 MyConnection deleteByID = new MyConnection();
                 con = deleteByID.getRegisterConnection();
                 St = con.createStatement();
