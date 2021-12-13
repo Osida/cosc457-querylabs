@@ -367,7 +367,7 @@ public class Order extends javax.swing.JFrame {
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(this, "Oops ... " + ex.getMessage());
             System.out.println("SQLException: " + ex.getMessage());
-            Logger.getLogger(Category.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Order.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_CreateBtnMouseClicked
 
@@ -409,7 +409,8 @@ public class Order extends javax.swing.JFrame {
                 OrderVendorID.setText("");
                 OrderComments.setText("");
             } catch (SQLException ex) {
-                Logger.getLogger(Category.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(this, "Oops ... " + ex.getMessage());
+                Logger.getLogger(Order.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }//GEN-LAST:event_UpdateBtnActionPerformed
@@ -417,7 +418,7 @@ public class Order extends javax.swing.JFrame {
     private void DeleteBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_DeleteBtnMouseClicked
         // TODO add your handling code here:
         if (OrderID.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Enter the category id to be deleted.");
+            JOptionPane.showMessageDialog(this, "Enter the order id to be deleted.");
         } else {
             try {
                 String ID = OrderID.getText();
@@ -435,7 +436,8 @@ public class Order extends javax.swing.JFrame {
                 OrderVendorID.setText("");
                 OrderComments.setText("");
             } catch (SQLException ex) {
-                Logger.getLogger(Category.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(this, "Oops ... " + ex.getMessage());
+                Logger.getLogger(Order.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }//GEN-LAST:event_DeleteBtnMouseClicked
@@ -468,7 +470,8 @@ public class Order extends javax.swing.JFrame {
             RS = St.executeQuery(query);
             OrderTable.setModel(DbUtils.resultSetToTableModel(RS));
         } catch (SQLException ex) {
-            Logger.getLogger(Vendor.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, "Oops ... " + ex.getMessage());
+            Logger.getLogger(Order.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

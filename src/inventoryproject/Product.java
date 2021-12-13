@@ -573,7 +573,7 @@ public class Product extends javax.swing.JFrame {
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(this, "Oops ... " + ex.getMessage());
             System.out.println("SQLException: " + ex.getMessage());
-            Logger.getLogger(Category.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_CreateBtnMouseClicked
 
@@ -626,7 +626,8 @@ public class Product extends javax.swing.JFrame {
                 ProdUnitMeasurement.setText("");
                 ProdDescription.setText("");
             } catch (SQLException ex) {
-                Logger.getLogger(Category.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(this, "Oops ... " + ex.getMessage());
+                Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }//GEN-LAST:event_UpdateBtnActionPerformed
@@ -674,7 +675,8 @@ public class Product extends javax.swing.JFrame {
                 ProdUnitMeasurement.setText("");
                 ProdDescription.setText("");
             } catch (SQLException ex) {
-                Logger.getLogger(Category.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(this, "Oops ... " + ex.getMessage());
+                Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }//GEN-LAST:event_DeleteBtnMouseClicked
@@ -731,8 +733,9 @@ public class Product extends javax.swing.JFrame {
                 ProdDescription.setText(rs.getString("description"));
             }
 //            con.close();
-        } catch (SQLException e) {
-            Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, e);
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Oops ... " + ex.getMessage());
+            Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_SearchBtnActionPerformed
 
@@ -757,8 +760,9 @@ public class Product extends javax.swing.JFrame {
                 ProdDescription.setText(rs.getString("description"));
             }
 //            con.close();
-        } catch (SQLException e) {
-            Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, e);
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Oops ... " + ex.getMessage());
+            Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }//GEN-LAST:event_SearchKeyReleased
@@ -772,6 +776,7 @@ public class Product extends javax.swing.JFrame {
             RS = St.executeQuery(query);
             ProdTable.setModel(DbUtils.resultSetToTableModel(RS));
         } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Oops ... " + ex.getMessage());
             Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -789,6 +794,7 @@ public class Product extends javax.swing.JFrame {
             }
 
         } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Oops ... " + ex.getMessage());
             Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -808,7 +814,8 @@ public class Product extends javax.swing.JFrame {
                 ProdStorage.addItem("ID:" + RSGS.getString("id") + "   " + RSGS.getString("name"));
             }
 
-        } catch (Exception ex) {
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Oops ... " + ex.getMessage());
             Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

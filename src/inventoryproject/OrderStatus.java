@@ -293,7 +293,7 @@ public class OrderStatus extends javax.swing.JFrame {
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(this, "Oops ... " + ex.getMessage());
             System.out.println("SQLException: " + ex.getMessage());
-            Logger.getLogger(Category.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(OrderStatus.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_CreateBtnMouseClicked
 
@@ -319,7 +319,8 @@ public class OrderStatus extends javax.swing.JFrame {
                 OrderStatusID.setText("");
                 OrderStatusName.setText("");
             } catch (SQLException ex) {
-                Logger.getLogger(Category.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(this, "Oops ... " + ex.getMessage());
+                Logger.getLogger(OrderStatus.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }//GEN-LAST:event_UpdateBtnActionPerformed
@@ -342,7 +343,8 @@ public class OrderStatus extends javax.swing.JFrame {
                 OrderStatusID.setText("");
                 OrderStatusName.setText("");
             } catch (SQLException ex) {
-                Logger.getLogger(Category.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(this, "Oops ... " + ex.getMessage());
+                Logger.getLogger(OrderStatus.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }//GEN-LAST:event_DeleteBtnMouseClicked
@@ -378,7 +380,8 @@ public class OrderStatus extends javax.swing.JFrame {
             RS = St.executeQuery(query);
             OrderStatusTable.setModel(DbUtils.resultSetToTableModel(RS));
         } catch (SQLException ex) {
-            Logger.getLogger(Vendor.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(this, "Oops ... " + ex.getMessage());
+            Logger.getLogger(OrderStatus.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

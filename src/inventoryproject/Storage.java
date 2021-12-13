@@ -298,7 +298,7 @@ public class Storage extends javax.swing.JFrame {
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(this, "Oops ... " + ex.getMessage());
             System.out.println("SQLException: " + ex.getMessage());
-            Logger.getLogger(Category.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Storage.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_CreateBtnMouseClicked
 
@@ -334,7 +334,8 @@ public class Storage extends javax.swing.JFrame {
                 StorageID.setText("");
                 StorageName.setText("");
             } catch (SQLException ex) {
-                Logger.getLogger(Category.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(this, "Oops ... " + ex.getMessage());
+                Logger.getLogger(Storage.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }//GEN-LAST:event_UpdateBtnActionPerformed
@@ -357,7 +358,8 @@ public class Storage extends javax.swing.JFrame {
                 StorageID.setText("");
                 StorageName.setText("");
             } catch (SQLException ex) {
-                Logger.getLogger(Category.class.getName()).log(Level.SEVERE, null, ex);
+                JOptionPane.showMessageDialog(this, "Oops ... " + ex.getMessage());
+                Logger.getLogger(Storage.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }//GEN-LAST:event_DeleteBtnMouseClicked
@@ -383,6 +385,7 @@ public class Storage extends javax.swing.JFrame {
             RS = St.executeQuery(query);
             StorageTable.setModel(DbUtils.resultSetToTableModel(RS));
         } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Oops ... " + ex.getMessage());
             Logger.getLogger(Storage.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

@@ -376,6 +376,7 @@ public class Vendor extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "Vendor updated successfully.");
                 SelectAllFromVen();
             } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(this, "Oops ... " + ex.getMessage());
                 Logger.getLogger(Vendor.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -403,6 +404,7 @@ public class Vendor extends javax.swing.JFrame {
                 VendorPhone.setText("");
                 VendorAddress.setText("");
             } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(this, "Oops ... " + ex.getMessage());
                 Logger.getLogger(Vendor.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -449,6 +451,7 @@ public class Vendor extends javax.swing.JFrame {
             RS = St.executeQuery(query);
             VenTable.setModel(DbUtils.resultSetToTableModel(RS));
         } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Oops ... " + ex.getMessage());
             Logger.getLogger(Vendor.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

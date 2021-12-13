@@ -262,7 +262,7 @@ public class Login extends javax.swing.JFrame {
             } catch (SQLException ex) {
                 JOptionPane.showMessageDialog(this, "Oops ... " + ex.getMessage());
                 System.out.println("SQLException: " + ex.getMessage());
-                Logger.getLogger(Category.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
 
