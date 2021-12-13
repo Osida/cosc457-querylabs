@@ -26,9 +26,10 @@ public class Product extends javax.swing.JFrame {
      */
     public Product() {
         initComponents();
-        SelectAllFromProd();
-        GetCategories();
-        GetStorage();
+        selectAllFromProd();
+        getCategories();
+        getStorage();
+        getVendors();
     }
 
     Connection con = null;
@@ -37,6 +38,8 @@ public class Product extends javax.swing.JFrame {
     ResultSet RS = null;
     PreparedStatement ps = null;
     PreparedStatement ps2 = null;
+    String oops = "Oops ... ";
+    String numFilter = "[^0-9]";
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -68,7 +71,6 @@ public class Product extends javax.swing.JFrame {
         ProdPrice = new javax.swing.JTextField();
         jLabel19 = new javax.swing.JLabel();
         jLabel20 = new javax.swing.JLabel();
-        ProdVendorID = new javax.swing.JTextField();
         jLabel21 = new javax.swing.JLabel();
         jPanel7 = new javax.swing.JPanel();
         ProdStorage = new javax.swing.JComboBox<>();
@@ -80,6 +82,7 @@ public class Product extends javax.swing.JFrame {
         jLabel23 = new javax.swing.JLabel();
         ProdDeleteID = new javax.swing.JTextField();
         SearchBtn = new javax.swing.JButton();
+        ProdVendors = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -243,18 +246,11 @@ public class Product extends javax.swing.JFrame {
 
         jLabel19.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
         jLabel19.setForeground(new java.awt.Color(204, 0, 51));
-        jLabel19.setText("Price");
+        jLabel19.setText("Price *");
 
         jLabel20.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
         jLabel20.setForeground(new java.awt.Color(204, 0, 51));
-        jLabel20.setText("Vendor ID");
-
-        ProdVendorID.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
-        ProdVendorID.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ProdVendorIDActionPerformed(evt);
-            }
-        });
+        jLabel20.setText("Vendor ID *");
 
         jLabel21.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
         jLabel21.setForeground(new java.awt.Color(204, 0, 51));
@@ -338,6 +334,13 @@ public class Product extends javax.swing.JFrame {
             }
         });
 
+        ProdVendors.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
+        ProdVendors.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ProdVendorsActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -346,9 +349,6 @@ public class Product extends javax.swing.JFrame {
                 .addGap(12, 12, 12)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -356,8 +356,6 @@ public class Product extends javax.swing.JFrame {
                                     .addComponent(jLabel18, javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel17, javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(ProdUnitMeasurement, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 165, Short.MAX_VALUE)
-                                    .addComponent(ProdVendorID, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 165, Short.MAX_VALUE)
-                                    .addComponent(jLabel20, javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(ProdName, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 165, Short.MAX_VALUE)
                                     .addComponent(jLabel14, javax.swing.GroupLayout.Alignment.LEADING))
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -387,7 +385,13 @@ public class Product extends javax.swing.JFrame {
                                 .addComponent(ProdCategory, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(ProdStorage, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel20)
+                            .addComponent(ProdVendors, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(Search, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -428,18 +432,20 @@ public class Product extends javax.swing.JFrame {
                             .addComponent(ProdName, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(ProdQty, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel19)
-                            .addComponent(jLabel20))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel19)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(ProdPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel17)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(ProdUnitMeasurement, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel20)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(ProdVendorID, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(ProdPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
-                        .addComponent(jLabel17)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(ProdUnitMeasurement, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(ProdVendors, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel18)
@@ -458,7 +464,7 @@ public class Product extends javax.swing.JFrame {
                             .addComponent(UpdateBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(DeleteBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(CreateBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(jScrollPane1))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 459, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(HomeBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -542,48 +548,50 @@ public class Product extends javax.swing.JFrame {
 
     private void CreateBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_CreateBtnMouseClicked
         // TODO add your handling code here:
-        try {
-            query = "INSERT INTO products (name, qty, vendor_id, price, unit_measure, storage_id, categorie_id, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-            MyConnection create = new MyConnection();
-            con = create.getRegisterConnection();
-            PreparedStatement pstmt = con.prepareStatement(query);
-            pstmt.setString(1, ProdName.getText());
-            pstmt.setInt(2, Integer.valueOf(ProdQty.getText()));
-            pstmt.setInt(3, Integer.valueOf(ProdVendorID.getText()));
-            pstmt.setFloat(4, Float.valueOf(ProdPrice.getText()));
-            pstmt.setString(5, ProdUnitMeasurement.getText());
-            String numberOnly1 = ProdStorage.getSelectedItem().toString().replaceAll("[^0-9]", "");
-            String numberOnly2 = ProdCategory.getSelectedItem().toString().replaceAll("[^0-9]", "");
-            int prodStorageID = Integer.valueOf(numberOnly1);
-            int prodCatID = Integer.valueOf(numberOnly2);
-            pstmt.setInt(6, prodStorageID);
-            pstmt.setInt(7, prodCatID);
-            pstmt.setString(8, ProdDescription.getText());
-            int row = pstmt.executeUpdate();
-            JOptionPane.showMessageDialog(this, "Product successfully created.");
-            con.close();
-            SelectAllFromProd();
-            ProdDeleteID.setText("");
-            ProdName.setText("");
-            ProdQty.setText("");
-            ProdVendorID.setText("");
-            ProdPrice.setText("");
-            ProdUnitMeasurement.setText("");
-            ProdDescription.setText("");
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, "Oops ... " + ex.getMessage());
-            System.out.println("SQLException: " + ex.getMessage());
-            Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
+        if (ProdName.getText().isEmpty() || ProdQty.getText().isEmpty() || ProdVendors.getSelectedItem().toString().isEmpty() || ProdPrice.getText().isEmpty() || ProdUnitMeasurement.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Missing information.");
+        } else {
+            try {
+                query = "INSERT INTO products (name, qty, vendor_id, price, unit_measure, storage_id, categorie_id, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+                MyConnection create = new MyConnection();
+                con = create.getRegisterConnection();
+                PreparedStatement pstmt = con.prepareStatement(query);
+                pstmt.setString(1, ProdName.getText());
+                pstmt.setInt(2, Integer.valueOf(ProdQty.getText()));
+                pstmt.setFloat(4, Float.valueOf(ProdPrice.getText()));
+                pstmt.setString(5, ProdUnitMeasurement.getText());
+                String numberOnly1 = ProdStorage.getSelectedItem().toString().replaceAll(numFilter, "");
+                String numberOnly2 = ProdCategory.getSelectedItem().toString().replaceAll(numFilter, "");
+                String numberOnly3 = ProdVendors.getSelectedItem().toString().replaceAll(numFilter, "");
+                int prodStorageID = Integer.valueOf(numberOnly1);
+                int prodCatID = Integer.valueOf(numberOnly2);
+                int prodVendorID = Integer.valueOf(numberOnly3);
+                pstmt.setInt(6, prodStorageID);
+                pstmt.setInt(7, prodCatID);
+                pstmt.setInt(3, prodVendorID);
+                pstmt.setString(8, ProdDescription.getText());
+                int row = pstmt.executeUpdate();
+                JOptionPane.showMessageDialog(this, "Product successfully created.");
+                con.close();
+                selectAllFromProd();
+                ProdDeleteID.setText("");
+                ProdName.setText("");
+                ProdQty.setText("");
+                ProdPrice.setText("");
+                ProdUnitMeasurement.setText("");
+                ProdDescription.setText("");
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(this, oops + ex.getMessage());
+                System.out.println("SQLException: " + ex.getMessage());
+                Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
+
     }//GEN-LAST:event_CreateBtnMouseClicked
 
     private void ProdStorageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ProdStorageActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_ProdStorageActionPerformed
-
-    private void ProdVendorIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ProdVendorIDActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_ProdVendorIDActionPerformed
 
     private void ProdPriceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ProdPriceActionPerformed
         // TODO add your handling code here:
@@ -595,38 +603,37 @@ public class Product extends javax.swing.JFrame {
 
     private void UpdateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_UpdateBtnActionPerformed
         // TODO add your handling code here:
-        if (ProdDeleteID.getText().isEmpty() || ProdName.getText().isEmpty() || ProdQty.getText().isEmpty() || ProdVendorID.getText().isEmpty() || ProdPrice.getText().isEmpty() || ProdUnitMeasurement.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Missing information.");
+        if (ProdDeleteID.getText().isEmpty() || ProdName.getText().isEmpty() || ProdQty.getText().isEmpty() || ProdVendors.getSelectedItem().toString().isEmpty() || ProdPrice.getText().isEmpty() || ProdUnitMeasurement.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Missing information or nothing selected for update.");
         } else {
             try {
-//                String dbTable = "products";
                 String name = ProdName.getText();
                 int qty = Integer.valueOf(ProdQty.getText());
-                int vendorID = Integer.valueOf(ProdVendorID.getText());
                 float price = Float.valueOf(ProdPrice.getText());
                 String um = ProdUnitMeasurement.getText();
                 String desc = ProdDescription.getText();
                 int id = Integer.valueOf(ProdDeleteID.getText());
-                String numberOnly1 = ProdStorage.getSelectedItem().toString().replaceAll("[^0-9]", "");
-                String numberOnly2 = ProdCategory.getSelectedItem().toString().replaceAll("[^0-9]", "");
+                String numberOnly1 = ProdStorage.getSelectedItem().toString().replaceAll(numFilter, "");
+                String numberOnly2 = ProdCategory.getSelectedItem().toString().replaceAll(numFilter, "");
+                String numberOnly3 = ProdVendors.getSelectedItem().toString().replaceAll(numFilter, "");
                 int prodStorageID = Integer.valueOf(numberOnly1);
                 int prodCatID = Integer.valueOf(numberOnly2);
-                query = String.format("UPDATE products SET name='%s', qty=%d, vendor_id=%d, price=%.2f, unit_measure='%s', description='%s', categorie_id=%d, storage_id=%d WHERE id=%d", name, qty, vendorID, price, um, desc, prodCatID, prodStorageID, id);
+                int prodVendorID = Integer.valueOf(numberOnly3);
+                query = String.format("UPDATE products SET name='%s', qty=%d, vendor_id=%d, price=%f, unit_measure='%s', description='%s', categorie_id=%d, storage_id=%d WHERE id=%d", name, qty, prodVendorID, price, um, desc, prodCatID, prodStorageID, id);
                 MyConnection updateDB = new MyConnection();
                 con = updateDB.getRegisterConnection();
                 St = con.createStatement();
                 St.executeUpdate(query);
                 JOptionPane.showMessageDialog(this, "Product updated successfully.");
-                SelectAllFromProd();
+                selectAllFromProd();
                 ProdDeleteID.setText("");
                 ProdName.setText("");
                 ProdQty.setText("");
-                ProdVendorID.setText("");
                 ProdPrice.setText("");
                 ProdUnitMeasurement.setText("");
                 ProdDescription.setText("");
             } catch (SQLException ex) {
-                JOptionPane.showMessageDialog(this, "Oops ... " + ex.getMessage());
+                JOptionPane.showMessageDialog(this, oops + ex.getMessage());
                 Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -664,18 +671,17 @@ public class Product extends javax.swing.JFrame {
                 con = deleteByID.getRegisterConnection();
                 St = con.createStatement();
                 St.executeUpdate(query);
-                SelectAllFromProd();
+                selectAllFromProd();
                 JOptionPane.showMessageDialog(this, "Product deleted successfully.");
                 DefaultTableModel model = (DefaultTableModel) ProdTable.getModel();
                 ProdDeleteID.setText("");
                 ProdName.setText("");
                 ProdQty.setText("");
-                ProdVendorID.setText("");
                 ProdPrice.setText("");
                 ProdUnitMeasurement.setText("");
                 ProdDescription.setText("");
             } catch (SQLException ex) {
-                JOptionPane.showMessageDialog(this, "Oops ... " + ex.getMessage());
+                JOptionPane.showMessageDialog(this, oops + ex.getMessage());
                 Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -690,14 +696,11 @@ public class Product extends javax.swing.JFrame {
         DefaultTableModel model = (DefaultTableModel) ProdTable.getModel();
         int Myindex = ProdTable.getSelectedRow();
         ProdDeleteID.setText(model.getValueAt(Myindex, 0).toString());
-        ProdVendorID.setText(model.getValueAt(Myindex, 1).toString());
         ProdName.setText(model.getValueAt(Myindex, 2).toString());
         ProdQty.setText(model.getValueAt(Myindex, 3).toString());
         ProdDescription.setText(model.getValueAt(Myindex, 4).toString());
         ProdPrice.setText(model.getValueAt(Myindex, 5).toString());
         ProdUnitMeasurement.setText(model.getValueAt(Myindex, 6).toString());
-//        ProdStorage.setText(model.getValueAt(Myindex, 7).toString());
-//        ProdCategory.setText(model.getValueAt(Myindex, 8).toString());
     }//GEN-LAST:event_ProdTableMouseClicked
 
     private void ExitBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ExitBtnMouseClicked
@@ -728,13 +731,12 @@ public class Product extends javax.swing.JFrame {
                 ProdDeleteID.setText(rs.getString("id"));
                 ProdName.setText(rs.getString("name"));
                 ProdQty.setText(rs.getString("qty"));
-                ProdVendorID.setText(rs.getString("vendor_id"));
                 ProdUnitMeasurement.setText(rs.getString("unit_measure"));
                 ProdDescription.setText(rs.getString("description"));
             }
 //            con.close();
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, "Oops ... " + ex.getMessage());
+            JOptionPane.showMessageDialog(this, oops + ex.getMessage());
             Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_SearchBtnActionPerformed
@@ -755,19 +757,23 @@ public class Product extends javax.swing.JFrame {
                 ProdDeleteID.setText(rs.getString("id"));
                 ProdName.setText(rs.getString("name"));
                 ProdQty.setText(rs.getString("qty"));
-                ProdVendorID.setText(rs.getString("vendor_id"));
+                ProdPrice.setText(rs.getString("price"));
                 ProdUnitMeasurement.setText(rs.getString("unit_measure"));
                 ProdDescription.setText(rs.getString("description"));
             }
 //            con.close();
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, "Oops ... " + ex.getMessage());
+            JOptionPane.showMessageDialog(this, oops + ex.getMessage());
             Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
         }
 
     }//GEN-LAST:event_SearchKeyReleased
 
-    public void SelectAllFromProd() {
+    private void ProdVendorsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ProdVendorsActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_ProdVendorsActionPerformed
+
+    public void selectAllFromProd() {
         try {
             query = "SELECT * FROM products";
             MyConnection selectAll = new MyConnection();
@@ -776,13 +782,30 @@ public class Product extends javax.swing.JFrame {
             RS = St.executeQuery(query);
             ProdTable.setModel(DbUtils.resultSetToTableModel(RS));
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, "Oops ... " + ex.getMessage());
+            JOptionPane.showMessageDialog(this, oops + ex.getMessage());
             Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
 //    Update comboBox
-    private void GetCategories() {
+    private void getVendors() {
+        try {
+            MyConnection selectC = new MyConnection();
+            con = selectC.getRegisterConnection();
+            query = "SELECT * FROM mry.vendors";
+            ps = con.prepareStatement(query);
+            RS = ps.executeQuery();
+            while (RS.next()) {
+                ProdVendors.addItem("ID:" + RS.getString("id") + "   " + RS.getString("name"));
+            }
+
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, oops + ex.getMessage());
+            Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void getCategories() {
         try {
             MyConnection selectC = new MyConnection();
             con = selectC.getRegisterConnection();
@@ -794,12 +817,12 @@ public class Product extends javax.swing.JFrame {
             }
 
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Oops ... " + ex.getMessage());
+            JOptionPane.showMessageDialog(this, oops + ex.getMessage());
             Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    private void GetStorage() {
+    private void getStorage() {
         try {
             Statement StGS = null;
             ResultSet RSGS = null;
@@ -815,7 +838,7 @@ public class Product extends javax.swing.JFrame {
             }
 
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, "Oops ... " + ex.getMessage());
+            JOptionPane.showMessageDialog(this, oops + ex.getMessage());
             Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -869,7 +892,7 @@ public class Product extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> ProdStorage;
     private javax.swing.JTable ProdTable;
     private javax.swing.JTextField ProdUnitMeasurement;
-    private javax.swing.JTextField ProdVendorID;
+    private javax.swing.JComboBox<String> ProdVendors;
     private javax.swing.JTextField Search;
     private javax.swing.JButton SearchBtn;
     private javax.swing.JButton UpdateBtn;

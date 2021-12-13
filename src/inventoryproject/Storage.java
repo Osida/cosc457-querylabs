@@ -26,13 +26,14 @@ public class Storage extends javax.swing.JFrame {
      */
     public Storage() {
         initComponents();
-        SelectAllFromStorage();
+        selectAllFromStorage();
     }
 
     Connection con = null;
     String query = null;
     Statement St = null;
     ResultSet RS = null;
+    String oops = "Oops ...";
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -162,6 +163,11 @@ public class Storage extends javax.swing.JFrame {
         UpdateBtn.setForeground(new java.awt.Color(255, 255, 255));
         UpdateBtn.setText("Update");
         UpdateBtn.setBorder(null);
+        UpdateBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                UpdateBtnMouseClicked(evt);
+            }
+        });
         UpdateBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 UpdateBtnActionPerformed(evt);
@@ -284,22 +290,27 @@ public class Storage extends javax.swing.JFrame {
 
     private void CreateBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_CreateBtnMouseClicked
         // TODO add your handling code here:
-        try {
-            query = "INSERT INTO storage (name) VALUES (?)";
-            MyConnection create = new MyConnection();
-            con = create.getRegisterConnection();
-            PreparedStatement pstmt = con.prepareStatement(query);
-            pstmt.setString(1, StorageName.getText());
-            int row = pstmt.executeUpdate();
-            JOptionPane.showMessageDialog(this, "Storage type successfully created.");
-            SelectAllFromStorage();
-            StorageID.setText("");
-            StorageName.setText("");
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, "Oops ... " + ex.getMessage());
-            System.out.println("SQLException: " + ex.getMessage());
-            Logger.getLogger(Storage.class.getName()).log(Level.SEVERE, null, ex);
+        if (StorageName.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Missing information.");
+        } else {
+            try {
+                query = "INSERT INTO storage (name) VALUES (?)";
+                MyConnection create = new MyConnection();
+                con = create.getRegisterConnection();
+                PreparedStatement pstmt = con.prepareStatement(query);
+                pstmt.setString(1, StorageName.getText());
+                int row = pstmt.executeUpdate();
+                JOptionPane.showMessageDialog(this, "Storage type successfully created.");
+                selectAllFromStorage();
+                StorageID.setText("");
+                StorageName.setText("");
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(this, oops + ex.getMessage());
+                System.out.println("SQLException: " + ex.getMessage());
+                Logger.getLogger(Storage.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
+
     }//GEN-LAST:event_CreateBtnMouseClicked
 
     private void CreateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CreateBtnActionPerformed
@@ -318,26 +329,6 @@ public class Storage extends javax.swing.JFrame {
 
     private void UpdateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_UpdateBtnActionPerformed
         // TODO add your handling code here:
-        if (StorageID.getText().isEmpty() || StorageName.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Missing information.");
-        } else {
-            try {
-                String name = StorageName.getText();
-                int id = Integer.valueOf(StorageID.getText());
-                query = String.format("UPDATE storage SET name='%s' WHERE id=%d", name, id);
-                MyConnection updateDB = new MyConnection();
-                con = updateDB.getRegisterConnection();
-                St = con.createStatement();
-                St.executeUpdate(query);
-                JOptionPane.showMessageDialog(this, "Storage type updated successfully.");
-                SelectAllFromStorage();
-                StorageID.setText("");
-                StorageName.setText("");
-            } catch (SQLException ex) {
-                JOptionPane.showMessageDialog(this, "Oops ... " + ex.getMessage());
-                Logger.getLogger(Storage.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
     }//GEN-LAST:event_UpdateBtnActionPerformed
 
     private void DeleteBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_DeleteBtnMouseClicked
@@ -352,13 +343,13 @@ public class Storage extends javax.swing.JFrame {
                 con = deleteByID.getRegisterConnection();
                 St = con.createStatement();
                 St.executeUpdate(query);
-                SelectAllFromStorage();
+                selectAllFromStorage();
                 JOptionPane.showMessageDialog(this, "Storage type deleted successfully.");
                 DefaultTableModel model = (DefaultTableModel) StorageTable.getModel();
                 StorageID.setText("");
                 StorageName.setText("");
             } catch (SQLException ex) {
-                JOptionPane.showMessageDialog(this, "Oops ... " + ex.getMessage());
+                JOptionPane.showMessageDialog(this, oops + ex.getMessage());
                 Logger.getLogger(Storage.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -376,7 +367,31 @@ public class Storage extends javax.swing.JFrame {
         StorageName.setText(model.getValueAt(Myindex, 1).toString());
     }//GEN-LAST:event_StorageTableMouseClicked
 
-    public void SelectAllFromStorage() {
+    private void UpdateBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_UpdateBtnMouseClicked
+        // TODO add your handling code here:
+        if (StorageID.getText().isEmpty() || StorageName.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Missing information or nothing selected for update.");
+        } else {
+            try {
+                String name = StorageName.getText();
+                int id = Integer.valueOf(StorageID.getText());
+                query = String.format("UPDATE storage SET name='%s' WHERE id=%d", name, id);
+                MyConnection updateDB = new MyConnection();
+                con = updateDB.getRegisterConnection();
+                St = con.createStatement();
+                St.executeUpdate(query);
+                JOptionPane.showMessageDialog(this, "Storage type updated successfully.");
+                selectAllFromStorage();
+                StorageID.setText("");
+                StorageName.setText("");
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(this, oops + ex.getMessage());
+                Logger.getLogger(Storage.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_UpdateBtnMouseClicked
+
+    public void selectAllFromStorage() {
         try {
             query = "SELECT * FROM mry.storage";
             MyConnection selectAll = new MyConnection();
@@ -385,7 +400,7 @@ public class Storage extends javax.swing.JFrame {
             RS = St.executeQuery(query);
             StorageTable.setModel(DbUtils.resultSetToTableModel(RS));
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, "Oops ... " + ex.getMessage());
+            JOptionPane.showMessageDialog(this, oops + ex.getMessage());
             Logger.getLogger(Storage.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

@@ -28,13 +28,20 @@ public class Order extends javax.swing.JFrame {
      */
     public Order() {
         initComponents();
-        SelectAllFromOrders();
+        selectAllFromOrders();
+        getOrderStatusIDs();
+        getVendorIDs();
+        getUserIDs();
     }
 
     Connection con = null;
     String query = null;
     Statement St = null;
     ResultSet RS = null;
+    PreparedStatement ps = null;
+    PreparedStatement ps2 = null;
+    String oops = "Oops ...";
+    String numFilter = "[^0-9]";
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -53,9 +60,7 @@ public class Order extends javax.swing.JFrame {
         OrderTable = new javax.swing.JTable();
         OrderID = new javax.swing.JTextField();
         jLabel14 = new javax.swing.JLabel();
-        OrderUserID = new javax.swing.JTextField();
         jLabel15 = new javax.swing.JLabel();
-        OrderVendorID = new javax.swing.JTextField();
         jLabel16 = new javax.swing.JLabel();
         jLabel17 = new javax.swing.JLabel();
         OrderComments = new javax.swing.JTextField();
@@ -63,8 +68,10 @@ public class Order extends javax.swing.JFrame {
         HomeBtn = new javax.swing.JButton();
         UpdateBtn = new javax.swing.JButton();
         DeleteBtn = new javax.swing.JButton();
-        OrderStatus = new javax.swing.JTextField();
         jLabel18 = new javax.swing.JLabel();
+        OrderUserID = new javax.swing.JComboBox<>();
+        OrderStatus = new javax.swing.JComboBox<>();
+        OrderVendorID = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(1167, 670));
@@ -134,23 +141,9 @@ public class Order extends javax.swing.JFrame {
         jLabel14.setForeground(new java.awt.Color(204, 0, 51));
         jLabel14.setText("Order ID");
 
-        OrderUserID.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
-        OrderUserID.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                OrderUserIDActionPerformed(evt);
-            }
-        });
-
         jLabel15.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
         jLabel15.setForeground(new java.awt.Color(204, 0, 51));
         jLabel15.setText("User ID *");
-
-        OrderVendorID.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
-        OrderVendorID.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                OrderVendorIDActionPerformed(evt);
-            }
-        });
 
         jLabel16.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
         jLabel16.setForeground(new java.awt.Color(204, 0, 51));
@@ -225,6 +218,17 @@ public class Order extends javax.swing.JFrame {
             }
         });
 
+        jLabel18.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
+        jLabel18.setForeground(new java.awt.Color(204, 0, 51));
+        jLabel18.setText("Order Status *");
+
+        OrderUserID.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
+        OrderUserID.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                OrderUserIDActionPerformed(evt);
+            }
+        });
+
         OrderStatus.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
         OrderStatus.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -232,9 +236,12 @@ public class Order extends javax.swing.JFrame {
             }
         });
 
-        jLabel18.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
-        jLabel18.setForeground(new java.awt.Color(204, 0, 51));
-        jLabel18.setText("Order Status *");
+        OrderVendorID.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
+        OrderVendorID.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                OrderVendorIDActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -244,31 +251,35 @@ public class Order extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGap(40, 40, 40)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(OrderComments)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel14)
-                            .addComponent(jLabel15)
-                            .addComponent(jLabel16)
-                            .addComponent(jLabel17)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                    .addComponent(HomeBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(192, 192, 192))
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                    .addComponent(CreateBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(UpdateBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(DeleteBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addComponent(jLabel18)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(OrderStatus, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 282, Short.MAX_VALUE)
-                                .addComponent(OrderUserID, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(OrderVendorID, javax.swing.GroupLayout.Alignment.LEADING))
-                            .addComponent(OrderID, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 74, Short.MAX_VALUE)))
-                .addGap(18, 18, 18)
+                            .addComponent(OrderComments)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jLabel14)
+                                    .addComponent(jLabel15)
+                                    .addComponent(jLabel16)
+                                    .addComponent(jLabel17)
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(jPanel1Layout.createSequentialGroup()
+                                            .addComponent(HomeBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGap(192, 192, 192))
+                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                            .addComponent(CreateBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(UpdateBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(DeleteBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(jLabel18)
+                                    .addComponent(OrderID, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(OrderUserID, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGap(0, 74, Short.MAX_VALUE)))
+                        .addGap(18, 18, 18))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(OrderStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(OrderVendorID, javax.swing.GroupLayout.PREFERRED_SIZE, 282, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 724, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(27, 27, 27))
         );
@@ -294,7 +305,7 @@ public class Order extends javax.swing.JFrame {
                         .addComponent(jLabel16)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(OrderVendorID, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(12, 12, 12)
                         .addComponent(jLabel17)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(OrderComments, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -332,43 +343,47 @@ public class Order extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_OrderIDActionPerformed
 
-    private void OrderUserIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OrderUserIDActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_OrderUserIDActionPerformed
-
-    private void OrderVendorIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OrderVendorIDActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_OrderVendorIDActionPerformed
-
     private void OrderCommentsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OrderCommentsActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_OrderCommentsActionPerformed
 
     private void CreateBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_CreateBtnMouseClicked
         // TODO add your handling code here:
-        try {
-            query = "INSERT INTO orders (user_id, order_status, comments, vendor_id) VALUES (?, ?, ?, ?)";
-            MyConnection create = new MyConnection();
-            con = create.getRegisterConnection();
-            PreparedStatement pstmt = con.prepareStatement(query);
-            pstmt.setInt(1, Integer.valueOf(OrderUserID.getText()));
-            pstmt.setInt(2, Integer.valueOf(OrderStatus.getText()));
-            pstmt.setString(3, OrderComments.getText());
-            pstmt.setInt(4, Integer.valueOf(OrderVendorID.getText()));
-            int row = pstmt.executeUpdate();
-            JOptionPane.showMessageDialog(this, "Order successfully created.");
-            con.close();
-            SelectAllFromOrders();
-            OrderID.setText("");
-            OrderStatus.setText("");
-            OrderUserID.setText("");
-            OrderVendorID.setText("");
-            OrderComments.setText("");
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, "Oops ... " + ex.getMessage());
-            System.out.println("SQLException: " + ex.getMessage());
-            Logger.getLogger(Order.class.getName()).log(Level.SEVERE, null, ex);
+
+        if (OrderUserID.getSelectedItem().toString().isEmpty() || OrderVendorID.getSelectedItem().toString().isEmpty() || OrderStatus.getSelectedItem().toString().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Missing information.");
+        } else {
+            try {
+                query = "INSERT INTO orders (user_id, order_status, comments, vendor_id) VALUES (?, ?, ?, ?)";
+                MyConnection create = new MyConnection();
+                con = create.getRegisterConnection();
+                PreparedStatement pstmt = con.prepareStatement(query);
+                String numberOnly1 = OrderUserID.getSelectedItem().toString().replaceAll(numFilter, "");
+                int userID = Integer.valueOf(numberOnly1);
+                String numberOnly2 = OrderStatus.getSelectedItem().toString().replaceAll(numFilter, "");
+                int status = Integer.valueOf(numberOnly2);
+                String numberOnly3 = OrderVendorID.getSelectedItem().toString().replaceAll(numFilter, "");
+                int vendorID = Integer.valueOf(numberOnly3);
+                pstmt.setInt(1, userID);
+                pstmt.setInt(2, status);
+                pstmt.setString(3, OrderComments.getText());
+                pstmt.setInt(4, vendorID);
+                int row = pstmt.executeUpdate();
+                JOptionPane.showMessageDialog(this, "Order successfully created.");
+                con.close();
+                selectAllFromOrders();
+                OrderID.setText("");
+//            OrderStatus.setText("");
+//            OrderUserID.setText("");
+//            OrderVendorID.setText("");
+                OrderComments.setText("");
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(this, oops + ex.getMessage());
+                System.out.println("SQLException: " + ex.getMessage());
+                Logger.getLogger(Order.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
+
     }//GEN-LAST:event_CreateBtnMouseClicked
 
     private void CreateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CreateBtnActionPerformed
@@ -387,29 +402,32 @@ public class Order extends javax.swing.JFrame {
 
     private void UpdateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_UpdateBtnActionPerformed
         // TODO add your handling code here:
-        if (OrderID.getText().isEmpty() || OrderUserID.getText().isEmpty() || OrderVendorID.getText().isEmpty() || OrderComments.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Missing information.");
+        if (OrderID.getText().isEmpty() || OrderUserID.getSelectedItem().toString().isEmpty() || OrderVendorID.getSelectedItem().toString().isEmpty() || OrderStatus.getSelectedItem().toString().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Missing information or nothing selected for update.");
         } else {
             try {
-                int userID = Integer.valueOf(OrderUserID.getText());
-                String comments = OrderComments.getText();
-                int order_status = Integer.valueOf(OrderStatus.getText());
-                int vendorID = Integer.valueOf(OrderVendorID.getText());
+                String numberOnly1 = OrderUserID.getSelectedItem().toString().replaceAll(numFilter, "");
+                int userID = Integer.valueOf(numberOnly1);
+                String numberOnly2 = OrderStatus.getSelectedItem().toString().replaceAll(numFilter, "");
+                int order_status = Integer.valueOf(numberOnly2);
+                String numberOnly3 = OrderVendorID.getSelectedItem().toString().replaceAll(numFilter, "");
+                int vendorID = Integer.valueOf(numberOnly3);
                 int id = Integer.valueOf(OrderID.getText());
-                String query = String.format("UPDATE orders SET order_status=%d, comments='%s', vendor_id=%d WHERE id=%d", order_status, comments, vendorID, id);
+                String comments = OrderComments.getText();
+                query = String.format("UPDATE orders SET user_id=%d, order_status=%d, comments='%s', vendor_id=%d WHERE id=%d", userID, order_status, comments, vendorID, id);
                 MyConnection updateDB = new MyConnection();
                 con = updateDB.getRegisterConnection();
                 St = con.createStatement();
                 St.executeUpdate(query);
                 JOptionPane.showMessageDialog(this, "Order updated successfully.");
-                SelectAllFromOrders();
+                selectAllFromOrders();
                 OrderID.setText("");
-                OrderStatus.setText("");
-                OrderUserID.setText("");
-                OrderVendorID.setText("");
+//                OrderStatus.setText("");
+//                OrderUserID.setText("");
+//                OrderVendorID.setText("");
                 OrderComments.setText("");
             } catch (SQLException ex) {
-                JOptionPane.showMessageDialog(this, "Oops ... " + ex.getMessage());
+                JOptionPane.showMessageDialog(this, oops + ex.getMessage());
                 Logger.getLogger(Order.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -427,16 +445,16 @@ public class Order extends javax.swing.JFrame {
                 con = deleteByID.getRegisterConnection();
                 St = con.createStatement();
                 St.executeUpdate(query);
-                SelectAllFromOrders();
+                selectAllFromOrders();
                 JOptionPane.showMessageDialog(this, "Order deleted successfully.");
-                DefaultTableModel model = (DefaultTableModel) OrderTable.getModel();
+//                DefaultTableModel model = (DefaultTableModel) OrderTable.getModel();
                 OrderID.setText("");
-                OrderStatus.setText("");
-                OrderUserID.setText("");
-                OrderVendorID.setText("");
+//                OrderStatus.setText("");
+//                OrderUserID.setText("");
+//                OrderVendorID.setText("");
                 OrderComments.setText("");
             } catch (SQLException ex) {
-                JOptionPane.showMessageDialog(this, "Oops ... " + ex.getMessage());
+                JOptionPane.showMessageDialog(this, oops + ex.getMessage());
                 Logger.getLogger(Order.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -446,22 +464,30 @@ public class Order extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_DeleteBtnActionPerformed
 
-    private void OrderStatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OrderStatusActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_OrderStatusActionPerformed
-
     private void OrderTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_OrderTableMouseClicked
         // TODO add your handling code here:
         DefaultTableModel model = (DefaultTableModel) OrderTable.getModel();
         int Myindex = OrderTable.getSelectedRow();
         OrderID.setText(model.getValueAt(Myindex, 0).toString());
-        OrderUserID.setText(model.getValueAt(Myindex, 1).toString());
-        OrderStatus.setText(model.getValueAt(Myindex, 3).toString());
+//        OrderUserID.setText(model.getValueAt(Myindex, 1).toString());
+//        OrderStatus.setText(model.getValueAt(Myindex, 3).toString());
         OrderComments.setText(model.getValueAt(Myindex, 4).toString());
-        OrderVendorID.setText(model.getValueAt(Myindex, 6).toString());
+//        OrderVendorID.setText(model.getValueAt(Myindex, 6).toString());
     }//GEN-LAST:event_OrderTableMouseClicked
 
-    public void SelectAllFromOrders() {
+    private void OrderUserIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OrderUserIDActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_OrderUserIDActionPerformed
+
+    private void OrderStatusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OrderStatusActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_OrderStatusActionPerformed
+
+    private void OrderVendorIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_OrderVendorIDActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_OrderVendorIDActionPerformed
+
+    public void selectAllFromOrders() {
         try {
             query = "SELECT * FROM mry.orders";
             MyConnection selectAll = new MyConnection();
@@ -470,8 +496,60 @@ public class Order extends javax.swing.JFrame {
             RS = St.executeQuery(query);
             OrderTable.setModel(DbUtils.resultSetToTableModel(RS));
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, "Oops ... " + ex.getMessage());
+            JOptionPane.showMessageDialog(this, oops + ex.getMessage());
             Logger.getLogger(Order.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    //    Update comboBox
+    private void getOrderStatusIDs() {
+        try {
+            MyConnection selectC = new MyConnection();
+            con = selectC.getRegisterConnection();
+            query = "SELECT * FROM mry.order_statuses";
+            ps = con.prepareStatement(query);
+            RS = ps.executeQuery();
+            while (RS.next()) {
+                OrderStatus.addItem("ID:" + RS.getString("id") + "   " + RS.getString("name"));
+            }
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, oops + ex.getMessage());
+            Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void getVendorIDs() {
+        try {
+            MyConnection selectC = new MyConnection();
+            con = selectC.getRegisterConnection();
+            query = "SELECT * FROM mry.vendors";
+            ps = con.prepareStatement(query);
+            RS = ps.executeQuery();
+            while (RS.next()) {
+                OrderVendorID.addItem("ID:" + RS.getString("id") + "   " + RS.getString("name"));
+            }
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, oops + ex.getMessage());
+            Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void getUserIDs() {
+        try {
+            MyConnection selectC = new MyConnection();
+            con = selectC.getRegisterConnection();
+            query = "SELECT * FROM mry.users";
+            ps = con.prepareStatement(query);
+            RS = ps.executeQuery();
+            while (RS.next()) {
+                OrderUserID.addItem("ID:" + RS.getString("id") + "   " + RS.getString("name"));
+            }
+
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, oops + ex.getMessage());
+            Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -517,10 +595,10 @@ public class Order extends javax.swing.JFrame {
     private javax.swing.JButton HomeBtn;
     private javax.swing.JTextField OrderComments;
     private javax.swing.JTextField OrderID;
-    private javax.swing.JTextField OrderStatus;
+    private javax.swing.JComboBox<String> OrderStatus;
     private javax.swing.JTable OrderTable;
-    private javax.swing.JTextField OrderUserID;
-    private javax.swing.JTextField OrderVendorID;
+    private javax.swing.JComboBox<String> OrderUserID;
+    private javax.swing.JComboBox<String> OrderVendorID;
     private javax.swing.JButton UpdateBtn;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;

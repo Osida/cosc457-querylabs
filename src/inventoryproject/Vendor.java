@@ -26,13 +26,14 @@ public class Vendor extends javax.swing.JFrame {
      */
     public Vendor() {
         initComponents();
-        SelectAllFromVen();
+        selectAllFromVendors();
     }
 
     Connection con = null;
     String query = null;
     Statement St = null;
     ResultSet RS = null;
+    String oops = "Oops ...";
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -359,8 +360,8 @@ public class Vendor extends javax.swing.JFrame {
 
     private void UpdateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_UpdateBtnActionPerformed
         // TODO add your handling code here:
-        if (VendorDeleteID.getText().isEmpty() || VendorName.getText().isEmpty() || VendorItem.getText().isEmpty() || VendorPhone.getText().isEmpty() || VendorAddress.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Missing information.");
+        if (VendorDeleteID.getText().isEmpty() || VendorName.getText().isEmpty() || VendorItem.getText().isEmpty() || VendorAddress.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Missing information or nothing selected for update.");
         } else {
             try {
                 String name = VendorName.getText();
@@ -374,9 +375,9 @@ public class Vendor extends javax.swing.JFrame {
                 St = con.createStatement();
                 St.executeUpdate(query);
                 JOptionPane.showMessageDialog(this, "Vendor updated successfully.");
-                SelectAllFromVen();
+                selectAllFromVendors();
             } catch (SQLException ex) {
-                JOptionPane.showMessageDialog(this, "Oops ... " + ex.getMessage());
+                JOptionPane.showMessageDialog(this, oops + ex.getMessage());
                 Logger.getLogger(Vendor.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -394,7 +395,7 @@ public class Vendor extends javax.swing.JFrame {
                 con = deleteByID.getRegisterConnection();
                 St = con.createStatement();
                 St.executeUpdate(query);
-                SelectAllFromVen();
+                selectAllFromVendors();
                 JOptionPane.showMessageDialog(this, "Vendor deleted successfully.");
 
                 DefaultTableModel model = (DefaultTableModel) VenTable.getModel();
@@ -404,7 +405,7 @@ public class Vendor extends javax.swing.JFrame {
                 VendorPhone.setText("");
                 VendorAddress.setText("");
             } catch (SQLException ex) {
-                JOptionPane.showMessageDialog(this, "Oops ... " + ex.getMessage());
+                JOptionPane.showMessageDialog(this, oops + ex.getMessage());
                 Logger.getLogger(Vendor.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -436,13 +437,37 @@ public class Vendor extends javax.swing.JFrame {
 
     private void CreateBtn1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_CreateBtn1MouseClicked
         // TODO add your handling code here:
+
+        if (VendorName.getText().isEmpty() || VendorItem.getText().isEmpty() || VendorAddress.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Missing information.");
+        } else {
+            try {
+                query = "INSERT INTO vendors (name, item, phone, address) VALUES (?, ?, ?, ?)";
+                MyConnection create = new MyConnection();
+                con = create.getRegisterConnection();
+                PreparedStatement pstmt = con.prepareStatement(query);
+                pstmt.setString(1, VendorName.getText());
+                pstmt.setString(2, VendorItem.getText());
+                pstmt.setString(3, VendorPhone.getText());
+                pstmt.setString(4, VendorAddress.getText());
+                JOptionPane.showMessageDialog(this, "Vendor successfully created.");
+                int row = pstmt.executeUpdate();
+                con.close();
+                selectAllFromVendors();
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(this, oops + ex.getMessage());
+                System.out.println("SQLException: " + ex.getMessage());
+                Logger.getLogger(Vendor.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
     }//GEN-LAST:event_CreateBtn1MouseClicked
 
     private void CreateBtn1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CreateBtn1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_CreateBtn1ActionPerformed
 
-    public void SelectAllFromVen() {
+    public void selectAllFromVendors() {
         try {
             query = "SELECT * FROM mry.vendors";
             MyConnection selectAll = new MyConnection();
@@ -451,7 +476,7 @@ public class Vendor extends javax.swing.JFrame {
             RS = St.executeQuery(query);
             VenTable.setModel(DbUtils.resultSetToTableModel(RS));
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, "Oops ... " + ex.getMessage());
+            JOptionPane.showMessageDialog(this, oops + ex.getMessage());
             Logger.getLogger(Vendor.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

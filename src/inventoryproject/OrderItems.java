@@ -35,6 +35,7 @@ public class OrderItems extends javax.swing.JFrame {
     String query = null;
     Statement St = null;
     ResultSet RS = null;
+    String oops = "Oops ...";
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -409,30 +410,35 @@ public class OrderItems extends javax.swing.JFrame {
 
     private void CreateBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_CreateBtnMouseClicked
         // TODO add your handling code here:
-        try {
-            query = "INSERT INTO order_items (order_id, product_id, qty, unit_price, total_price) VALUES (?, ?, ?, ?, ?)";
-            MyConnection create = new MyConnection();
-            con = create.getRegisterConnection();
-            PreparedStatement pstmt = con.prepareStatement(query);
-            pstmt.setInt(1, Integer.valueOf(OrderItemOrderID.getText()));
-            pstmt.setInt(2, Integer.valueOf(OrderItemProductID.getText()));
-            pstmt.setInt(3, Integer.valueOf(OrderItemQty.getText()));
-            pstmt.setFloat(4, Float.valueOf(OrderItemPrice.getText()));
-            pstmt.setFloat(5, Float.valueOf(OrderItemTotal.getText()));
-            int row = pstmt.executeUpdate();
-            JOptionPane.showMessageDialog(this, "Order item successfully created.");
-            con.close();
-            SelectAllFromOrderItems();
-            OrderItemOrderID.setText("");
-            OrderItemProductID.setText("");
-            OrderItemQty.setText("");
-            OrderItemPrice.setText("");
-            OrderItemTotal.setText("");
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, "Oops ... " + ex.getMessage());
-            System.out.println("SQLException: " + ex.getMessage());
-            Logger.getLogger(OrderItems.class.getName()).log(Level.SEVERE, null, ex);
+        if (OrderItemProductID.getText().isEmpty() || OrderItemQty.getText().isEmpty() || OrderItemPrice.getText().isEmpty() || OrderItemTotal.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Missing information.");
+        } else {
+            try {
+                query = "INSERT INTO order_items (order_id, product_id, qty, unit_price, total_price) VALUES (?, ?, ?, ?, ?)";
+                MyConnection create = new MyConnection();
+                con = create.getRegisterConnection();
+                PreparedStatement pstmt = con.prepareStatement(query);
+                pstmt.setInt(1, Integer.valueOf(OrderItemOrderID.getText()));
+                pstmt.setInt(2, Integer.valueOf(OrderItemProductID.getText()));
+                pstmt.setInt(3, Integer.valueOf(OrderItemQty.getText()));
+                pstmt.setFloat(4, Float.valueOf(OrderItemPrice.getText()));
+                pstmt.setFloat(5, Float.valueOf(OrderItemTotal.getText()));
+                int row = pstmt.executeUpdate();
+                JOptionPane.showMessageDialog(this, "Order item successfully created.");
+                con.close();
+                SelectAllFromOrderItems();
+                OrderItemOrderID.setText("");
+                OrderItemProductID.setText("");
+                OrderItemQty.setText("");
+                OrderItemPrice.setText("");
+                OrderItemTotal.setText("");
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(this, oops + ex.getMessage());
+                System.out.println("SQLException: " + ex.getMessage());
+                Logger.getLogger(OrderItems.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
+
     }//GEN-LAST:event_CreateBtnMouseClicked
 
     private void CreateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CreateBtnActionPerformed
@@ -452,7 +458,7 @@ public class OrderItems extends javax.swing.JFrame {
     private void UpdateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_UpdateBtnActionPerformed
         // TODO add your handling code here:
         if (OrderItemOrderID.getText().isEmpty() || OrderItemProductID.getText().isEmpty() || OrderItemQty.getText().isEmpty() || OrderItemPrice.getText().isEmpty() || OrderItemTotal.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Missing information.");
+            JOptionPane.showMessageDialog(this, "Missing information or nothing selected for update.");
         } else {
             try {
                 int qty = Integer.valueOf(OrderItemQty.getText());
@@ -460,7 +466,7 @@ public class OrderItems extends javax.swing.JFrame {
                 float total_price = Float.valueOf(OrderItemTotal.getText());
                 int order_id = Integer.valueOf(OrderItemOrderID.getText());
                 int product_id = Integer.valueOf(OrderItemProductID.getText());
-                query = String.format("UPDATE order_items SET qty=%d, unit_price=%.2f, total_price=%.2f WHERE order_id=%d AND product_id=%d", qty, unit_price, total_price, order_id, product_id);
+                query = String.format("UPDATE order_items SET qty=%d, unit_price=%f, total_price=%f WHERE order_id=%d AND product_id=%d", qty, unit_price, total_price, order_id, product_id);
                 MyConnection updateDB = new MyConnection();
                 con = updateDB.getRegisterConnection();
                 St = con.createStatement();
@@ -473,7 +479,7 @@ public class OrderItems extends javax.swing.JFrame {
                 OrderItemPrice.setText("");
                 OrderItemTotal.setText("");
             } catch (SQLException ex) {
-                JOptionPane.showMessageDialog(this, "Oops ... " + ex.getMessage());
+                JOptionPane.showMessageDialog(this, oops + ex.getMessage());
                 Logger.getLogger(OrderItems.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -501,7 +507,7 @@ public class OrderItems extends javax.swing.JFrame {
                 OrderItemPrice.setText("");
                 OrderItemTotal.setText("");
             } catch (SQLException ex) {
-                JOptionPane.showMessageDialog(this, "Oops ... " + ex.getMessage());
+                JOptionPane.showMessageDialog(this, oops + ex.getMessage());
                 Logger.getLogger(OrderItems.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -554,7 +560,7 @@ public class OrderItems extends javax.swing.JFrame {
             RS = St.executeQuery(query);
             OrderItemTable.setModel(DbUtils.resultSetToTableModel(RS));
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, "Oops ... " + ex.getMessage());
+            JOptionPane.showMessageDialog(this, oops + ex.getMessage());
             Logger.getLogger(OrderItems.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -581,7 +587,7 @@ public class OrderItems extends javax.swing.JFrame {
             RS = St.executeQuery(query);
             OrdersList.setModel(DbUtils.resultSetToTableModel(RS));
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, "Oops ... " + ex.getMessage());
+            JOptionPane.showMessageDialog(this, oops + ex.getMessage());
             Logger.getLogger(OrderItems.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

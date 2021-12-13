@@ -26,13 +26,14 @@ public class User extends javax.swing.JFrame {
      */
     public User() {
         initComponents();
-        SelectAllFromUsers();
+        selectAllFromUsers();
     }
 
     Connection con = null;
     String query = null;
     Statement St = null;
     ResultSet RS = null;
+    String oops = "Oops ...";
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -307,25 +308,30 @@ public class User extends javax.swing.JFrame {
 
     private void CreateBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_CreateBtnMouseClicked
         // TODO add your handling code here:
-        try {
-            query = "INSERT INTO users (name, password) VALUES (?, ?)";
-            MyConnection create = new MyConnection();
-            con = create.getRegisterConnection();
-            PreparedStatement pstmt = con.prepareStatement(query);
-            pstmt.setString(1, UserName.getText());
-            pstmt.setString(2, UserPassword.getText());
-            int row = pstmt.executeUpdate();
-            JOptionPane.showMessageDialog(this, "User successfully created.");
-            con.close();
-            UserID.setText("");
-            UserName.setText("");
-            UserPassword.setText("");
-            SelectAllFromUsers();
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, "Oops ... " + ex.getMessage());
-            System.out.println("SQLException: " + ex.getMessage());
-            Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
+        if (UserName.getText().isEmpty() || UserPassword.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Missing information.");
+        } else {
+            try {
+                query = "INSERT INTO users (name, password) VALUES (?, ?)";
+                MyConnection create = new MyConnection();
+                con = create.getRegisterConnection();
+                PreparedStatement pstmt = con.prepareStatement(query);
+                pstmt.setString(1, UserName.getText());
+                pstmt.setString(2, UserPassword.getText());
+                int row = pstmt.executeUpdate();
+                JOptionPane.showMessageDialog(this, "User successfully created.");
+                con.close();
+                UserID.setText("");
+                UserName.setText("");
+                UserPassword.setText("");
+                selectAllFromUsers();
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(this, oops + ex.getMessage());
+                System.out.println("SQLException: " + ex.getMessage());
+                Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
+
     }//GEN-LAST:event_CreateBtnMouseClicked
 
     private void CreateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CreateBtnActionPerformed
@@ -345,7 +351,7 @@ public class User extends javax.swing.JFrame {
     private void UpdateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_UpdateBtnActionPerformed
         // TODO add your handling code here:
         if (UserID.getText().isEmpty() || UserName.getText().isEmpty() || UserPassword.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Missing information.");
+            JOptionPane.showMessageDialog(this, "Missing information or nothing selected for update.");
         } else {
             try {
                 String name = UserName.getText();
@@ -360,9 +366,9 @@ public class User extends javax.swing.JFrame {
                 UserID.setText("");
                 UserName.setText("");
                 UserPassword.setText("");
-                SelectAllFromUsers();
+                selectAllFromUsers();
             } catch (SQLException ex) {
-                JOptionPane.showMessageDialog(this, "Oops ... " + ex.getMessage());
+                JOptionPane.showMessageDialog(this, oops + ex.getMessage());
                 Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -380,14 +386,14 @@ public class User extends javax.swing.JFrame {
                 con = deleteByID.getRegisterConnection();
                 St = con.createStatement();
                 St.executeUpdate(query);
-                SelectAllFromUsers();
+                selectAllFromUsers();
                 JOptionPane.showMessageDialog(this, "User deleted successfully.");
                 DefaultTableModel model = (DefaultTableModel) UserTable.getModel();
                 UserID.setText("");
                 UserName.setText("");
                 UserPassword.setText("");
             } catch (SQLException ex) {
-                JOptionPane.showMessageDialog(this, "Oops ... " + ex.getMessage());
+                JOptionPane.showMessageDialog(this, oops + ex.getMessage());
                 Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -401,7 +407,7 @@ public class User extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_UserPasswordActionPerformed
 
-    public void SelectAllFromUsers() {
+    public void selectAllFromUsers() {
         try {
             query = "SELECT * FROM mry.users";
             MyConnection selectAll = new MyConnection();
@@ -410,7 +416,7 @@ public class User extends javax.swing.JFrame {
             RS = St.executeQuery(query);
             UserTable.setModel(DbUtils.resultSetToTableModel(RS));
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, "Oops ... " + ex.getMessage());
+            JOptionPane.showMessageDialog(this, oops + ex.getMessage());
             Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

@@ -26,13 +26,14 @@ public class OrderStatus extends javax.swing.JFrame {
      */
     public OrderStatus() {
         initComponents();
-        SelectAllFromOrderStatuses();
+        selectAllFromOrderStatuses();
     }
 
     Connection con = null;
     String query = null;
     Statement St = null;
     ResultSet RS = null;
+    String oops = "Oops ...";
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -278,23 +279,28 @@ public class OrderStatus extends javax.swing.JFrame {
 
     private void CreateBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_CreateBtnMouseClicked
         // TODO add your handling code here:
-        try {
-            query = "INSERT INTO order_statuses (name) VALUES (?)";
-            MyConnection create = new MyConnection();
-            con = create.getRegisterConnection();
-            PreparedStatement pstmt = con.prepareStatement(query);
-            pstmt.setString(1, OrderStatusName.getText());
-            int row = pstmt.executeUpdate();
-            JOptionPane.showMessageDialog(this, "Order status successfully created.");
-            con.close();
-            SelectAllFromOrderStatuses();
-            OrderStatusID.setText("");
-            OrderStatusName.setText("");
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, "Oops ... " + ex.getMessage());
-            System.out.println("SQLException: " + ex.getMessage());
-            Logger.getLogger(OrderStatus.class.getName()).log(Level.SEVERE, null, ex);
+        if (OrderStatusName.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Missing information.");
+        } else {
+            try {
+                query = "INSERT INTO order_statuses (name) VALUES (?)";
+                MyConnection create = new MyConnection();
+                con = create.getRegisterConnection();
+                PreparedStatement pstmt = con.prepareStatement(query);
+                pstmt.setString(1, OrderStatusName.getText());
+                int row = pstmt.executeUpdate();
+                JOptionPane.showMessageDialog(this, "Order status successfully created.");
+                con.close();
+                selectAllFromOrderStatuses();
+                OrderStatusID.setText("");
+                OrderStatusName.setText("");
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(this, oops + ex.getMessage());
+                System.out.println("SQLException: " + ex.getMessage());
+                Logger.getLogger(OrderStatus.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
+
     }//GEN-LAST:event_CreateBtnMouseClicked
 
     private void CreateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CreateBtnActionPerformed
@@ -304,7 +310,7 @@ public class OrderStatus extends javax.swing.JFrame {
     private void UpdateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_UpdateBtnActionPerformed
         // TODO add your handling code here:
         if (OrderStatusID.getText().isEmpty() || OrderStatusName.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Missing information.");
+            JOptionPane.showMessageDialog(this, "Missing information or nothing selected for update.");
         } else {
             try {
                 String name = OrderStatusName.getText();
@@ -315,11 +321,11 @@ public class OrderStatus extends javax.swing.JFrame {
                 St = con.createStatement();
                 St.executeUpdate(query);
                 JOptionPane.showMessageDialog(this, "Order Status updated successfully.");
-                SelectAllFromOrderStatuses();
+                selectAllFromOrderStatuses();
                 OrderStatusID.setText("");
                 OrderStatusName.setText("");
             } catch (SQLException ex) {
-                JOptionPane.showMessageDialog(this, "Oops ... " + ex.getMessage());
+                JOptionPane.showMessageDialog(this, oops + ex.getMessage());
                 Logger.getLogger(OrderStatus.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -337,13 +343,13 @@ public class OrderStatus extends javax.swing.JFrame {
                 con = deleteByID.getRegisterConnection();
                 St = con.createStatement();
                 St.executeUpdate(query);
-                SelectAllFromOrderStatuses();
+                selectAllFromOrderStatuses();
                 JOptionPane.showMessageDialog(this, "Order status deleted successfully.");
                 DefaultTableModel model = (DefaultTableModel) OrderStatusTable.getModel();
                 OrderStatusID.setText("");
                 OrderStatusName.setText("");
             } catch (SQLException ex) {
-                JOptionPane.showMessageDialog(this, "Oops ... " + ex.getMessage());
+                JOptionPane.showMessageDialog(this, oops + ex.getMessage());
                 Logger.getLogger(OrderStatus.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
@@ -371,7 +377,7 @@ public class OrderStatus extends javax.swing.JFrame {
         OrderStatusName.setText(model.getValueAt(Myindex, 1).toString());
     }//GEN-LAST:event_OrderStatusTableMouseClicked
 
-    public void SelectAllFromOrderStatuses() {
+    public void selectAllFromOrderStatuses() {
         try {
             query = "SELECT * FROM mry.order_statuses";
             MyConnection selectAll = new MyConnection();
@@ -380,7 +386,7 @@ public class OrderStatus extends javax.swing.JFrame {
             RS = St.executeQuery(query);
             OrderStatusTable.setModel(DbUtils.resultSetToTableModel(RS));
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, "Oops ... " + ex.getMessage());
+            JOptionPane.showMessageDialog(this, oops + ex.getMessage());
             Logger.getLogger(OrderStatus.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

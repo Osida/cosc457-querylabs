@@ -30,6 +30,7 @@ public class Login extends javax.swing.JFrame {
     String query = null;
     Statement St = null;
     ResultSet RS = null;
+    String oops = "Oops ...";
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -260,7 +261,7 @@ public class Login extends javax.swing.JFrame {
                 }
 
             } catch (SQLException ex) {
-                JOptionPane.showMessageDialog(this, "Oops ... " + ex.getMessage());
+                JOptionPane.showMessageDialog(this, oops + ex.getMessage());
                 System.out.println("SQLException: " + ex.getMessage());
                 Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
             }

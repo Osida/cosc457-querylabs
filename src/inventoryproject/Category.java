@@ -123,7 +123,7 @@ public class Category extends javax.swing.JFrame {
 
         jLabel14.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
         jLabel14.setForeground(new java.awt.Color(204, 0, 51));
-        jLabel14.setText("Name");
+        jLabel14.setText("Name *");
 
         CatTable.setFont(new java.awt.Font("Microsoft YaHei UI", 0, 11)); // NOI18N
         CatTable.setModel(new javax.swing.table.DefaultTableModel(
@@ -312,22 +312,27 @@ public class Category extends javax.swing.JFrame {
 
     private void CreateBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_CreateBtnMouseClicked
         // TODO add your handling code here:
-        try {
-            query = "INSERT INTO categories (name) VALUES (?)";
-            MyConnection create = new MyConnection();
-            con = create.getRegisterConnection();
-            PreparedStatement pstmt = con.prepareStatement(query);
-            pstmt.setString(1, CatName.getText());
-            int row = pstmt.executeUpdate();
-            JOptionPane.showMessageDialog(this, "Category successfully created.");
-            SelectAllFromCat();
-            CatDeleteID.setText("");
-            CatName.setText("");
-        } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(this, "Oops ... " + ex.getMessage());
-            System.out.println("SQLException: " + ex.getMessage());
-            Logger.getLogger(Category.class.getName()).log(Level.SEVERE, null, ex);
+        if (CatName.getText().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Missing information.");
+        } else {
+            try {
+                query = "INSERT INTO categories (name) VALUES (?)";
+                MyConnection create = new MyConnection();
+                con = create.getRegisterConnection();
+                PreparedStatement pstmt = con.prepareStatement(query);
+                pstmt.setString(1, CatName.getText());
+                int row = pstmt.executeUpdate();
+                JOptionPane.showMessageDialog(this, "Category successfully created.");
+                SelectAllFromCat();
+                CatDeleteID.setText("");
+                CatName.setText("");
+            } catch (SQLException ex) {
+                JOptionPane.showMessageDialog(this, "Oops ... " + ex.getMessage());
+                System.out.println("SQLException: " + ex.getMessage());
+                Logger.getLogger(Category.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
+
     }//GEN-LAST:event_CreateBtnMouseClicked
 
     private void CreateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CreateBtnActionPerformed
@@ -337,7 +342,7 @@ public class Category extends javax.swing.JFrame {
     private void UpdateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_UpdateBtnActionPerformed
         // TODO add your handling code here:
         if (CatDeleteID.getText().isEmpty() || CatName.getText().isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Missing information.");
+            JOptionPane.showMessageDialog(this, "Missing information or nothing selected for update.");
         } else {
             try {
                 String name = CatName.getText();
