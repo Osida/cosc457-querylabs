@@ -28,12 +28,15 @@ public class Product extends javax.swing.JFrame {
         initComponents();
         SelectAllFromProd();
         GetCategories();
+        GetStorage();
     }
-    
+
     Connection con = null;
     String query = null;
     Statement St = null;
     ResultSet RS = null;
+    PreparedStatement ps = null;
+    PreparedStatement ps2 = null;
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -74,9 +77,10 @@ public class Product extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         ProdDescription = new javax.swing.JTextArea();
         jLabel22 = new javax.swing.JLabel();
-        ProdSearch = new javax.swing.JTextField();
+        Search = new javax.swing.JTextField();
         jLabel23 = new javax.swing.JLabel();
         ProdDeleteID = new javax.swing.JTextField();
+        SearchBtn = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -112,11 +116,11 @@ public class Product extends javax.swing.JFrame {
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGap(472, 472, 472)
-                        .addComponent(jLabel12))
-                    .addGroup(jPanel5Layout.createSequentialGroup()
                         .addGap(435, 435, 435)
-                        .addComponent(jLabel11)))
+                        .addComponent(jLabel11))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGap(472, 472, 472)
+                        .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(ExitBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -311,12 +315,17 @@ public class Product extends javax.swing.JFrame {
 
         jLabel22.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
         jLabel22.setForeground(new java.awt.Color(204, 0, 51));
-        jLabel22.setText("Search by");
+        jLabel22.setText("Search by name");
 
-        ProdSearch.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
-        ProdSearch.addActionListener(new java.awt.event.ActionListener() {
+        Search.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
+        Search.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ProdSearchActionPerformed(evt);
+                SearchActionPerformed(evt);
+            }
+        });
+        Search.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                SearchKeyReleased(evt);
             }
         });
 
@@ -331,6 +340,17 @@ public class Product extends javax.swing.JFrame {
             }
         });
 
+        SearchBtn.setBackground(new java.awt.Color(204, 0, 51));
+        SearchBtn.setFont(new java.awt.Font("Century Gothic", 1, 14)); // NOI18N
+        SearchBtn.setForeground(new java.awt.Color(255, 255, 255));
+        SearchBtn.setText("Search");
+        SearchBtn.setBorder(null);
+        SearchBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SearchBtnActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -339,29 +359,31 @@ public class Product extends javax.swing.JFrame {
                 .addGap(12, 12, 12)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel18)
-                            .addComponent(ProdCategory, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel17)
-                            .addComponent(ProdUnitMeasurement, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(ProdVendorID, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel20)
-                            .addComponent(ProdName, javax.swing.GroupLayout.PREFERRED_SIZE, 165, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel14))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(ProdStorage, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(ProdQty)
-                            .addComponent(ProdPrice)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel19)
-                                    .addComponent(jLabel21)
-                                    .addComponent(jLabel16))
-                                .addGap(0, 0, Short.MAX_VALUE))))
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 353, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(ProdDeleteID, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel18, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel17, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(ProdUnitMeasurement, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 165, Short.MAX_VALUE)
+                                    .addComponent(ProdVendorID, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 165, Short.MAX_VALUE)
+                                    .addComponent(jLabel20, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(ProdName, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 165, Short.MAX_VALUE)
+                                    .addComponent(jLabel14, javax.swing.GroupLayout.Alignment.LEADING))
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addGap(12, 12, 12)
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(ProdPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(ProdQty, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jLabel19)
+                                            .addComponent(jLabel16)))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addGap(30, 30, 30)
+                                        .addComponent(jLabel21))))
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                 .addGroup(jPanel1Layout.createSequentialGroup()
                                     .addComponent(HomeBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -372,15 +394,20 @@ public class Product extends javax.swing.JFrame {
                                     .addComponent(UpdateBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                     .addComponent(DeleteBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addComponent(ProdDeleteID, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel23, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel15))
+                            .addComponent(jLabel15)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(ProdCategory, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(ProdStorage, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 0, Short.MAX_VALUE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 784, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(ProdSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel22))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(Search, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(SearchBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel22)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 819, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(12, 12, 12))
             .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -389,15 +416,19 @@ public class Product extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel22)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(ProdSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabel23)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel22)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(Search, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(SearchBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jLabel23)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(24, 24, 24)
+                        .addGap(30, 30, 30)
                         .addComponent(ProdDeleteID, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -417,33 +448,33 @@ public class Product extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(ProdVendorID, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(ProdPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
                         .addComponent(jLabel17)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(ProdUnitMeasurement, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel18)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(ProdCategory, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addGap(45, 45, 45))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jLabel21)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(ProdStorage, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(ProdCategory, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(ProdStorage, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel15)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(UpdateBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(DeleteBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(CreateBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(HomeBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(12, 12, 12))
+                            .addComponent(CreateBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(jScrollPane1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(HomeBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -452,11 +483,11 @@ public class Product extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1167, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1239, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 670, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 671, Short.MAX_VALUE)
         );
 
         pack();
@@ -515,9 +546,9 @@ public class Product extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField8ActionPerformed
 
-    private void ProdSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ProdSearchActionPerformed
+    private void SearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SearchActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_ProdSearchActionPerformed
+    }//GEN-LAST:event_SearchActionPerformed
 
     private void CreateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_CreateBtnActionPerformed
         // TODO add your handling code here:
@@ -535,8 +566,12 @@ public class Product extends javax.swing.JFrame {
             pstmt.setInt(3, Integer.valueOf(ProdVendorID.getText()));
             pstmt.setFloat(4, Float.valueOf(ProdPrice.getText()));
             pstmt.setString(5, ProdUnitMeasurement.getText());
-            pstmt.setString(6, ProdStorage.getSelectedItem().toString());
-            pstmt.setString(7, ProdCategory.getSelectedItem().toString());
+            String numberOnly1 = ProdStorage.getSelectedItem().toString().replaceAll("[^0-9]", "");
+            String numberOnly2 = ProdCategory.getSelectedItem().toString().replaceAll("[^0-9]", "");
+            int prodStorageID = Integer.valueOf(numberOnly1);
+            int prodCatID = Integer.valueOf(numberOnly2);
+            pstmt.setInt(6, prodStorageID);
+            pstmt.setInt(7, prodCatID);
             pstmt.setString(8, ProdDescription.getText());
             int row = pstmt.executeUpdate();
             JOptionPane.showMessageDialog(this, "Product successfully created.");
@@ -586,7 +621,11 @@ public class Product extends javax.swing.JFrame {
                 String um = ProdUnitMeasurement.getText();
                 String desc = ProdDescription.getText();
                 int id = Integer.valueOf(ProdDeleteID.getText());
-                String query = String.format("UPDATE products SET name='%s', qty=%d, vendor_id=%d, price=%.2f, unit_measure='%s', description='%s' WHERE id=%d", name, qty, vendorID, price, um, desc, id);
+                String numberOnly1 = ProdStorage.getSelectedItem().toString().replaceAll("[^0-9]", "");
+                String numberOnly2 = ProdCategory.getSelectedItem().toString().replaceAll("[^0-9]", "");
+                int prodStorageID = Integer.valueOf(numberOnly1);
+                int prodCatID = Integer.valueOf(numberOnly2);
+                query = String.format("UPDATE products SET name='%s', qty=%d, vendor_id=%d, price=%.2f, unit_measure='%s', description='%s', categorie_id=%d, storage_id=%d WHERE id=%d", name, qty, vendorID, price, um, desc, prodCatID, prodStorageID, id);
                 MyConnection updateDB = new MyConnection();
                 con = updateDB.getRegisterConnection();
                 St = con.createStatement();
@@ -683,6 +722,61 @@ public class Product extends javax.swing.JFrame {
         new HomeForm().setVisible(true);
         this.dispose();
     }//GEN-LAST:event_HomeBtnMouseClicked
+
+    private void SearchBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SearchBtnActionPerformed
+        // TODO add your handling code here:
+
+        Statement St = null;
+        ResultSet rs = null;
+        PreparedStatement pst = null;
+
+        try {
+            String sql = "SELECT * FROM products WHERE name=?";
+            pst = con.prepareStatement(sql);
+            pst.setString(1, Search.getText());
+            rs = pst.executeQuery();
+
+            if (rs.next()) {
+                ProdDeleteID.setText(rs.getString("id"));
+                ProdName.setText(rs.getString("name"));
+                ProdQty.setText(rs.getString("qty"));
+                ProdVendorID.setText(rs.getString("vendor_id"));
+                ProdUnitMeasurement.setText(rs.getString("unit_measure"));
+                ProdDescription.setText(rs.getString("description"));
+            }
+//            con.close();
+        } catch (SQLException e) {
+            Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, e);
+        }
+    }//GEN-LAST:event_SearchBtnActionPerformed
+
+    private void SearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_SearchKeyReleased
+        // TODO add your handling code here:
+        Statement St = null;
+        ResultSet rs = null;
+        PreparedStatement pst = null;
+
+        try {
+            String sql = "SELECT * FROM products WHERE name=?";
+            pst = con.prepareStatement(sql);
+            pst.setString(1, Search.getText());
+            rs = pst.executeQuery();
+
+            if (rs.next()) {
+                ProdDeleteID.setText(rs.getString("id"));
+                ProdName.setText(rs.getString("name"));
+                ProdQty.setText(rs.getString("qty"));
+                ProdVendorID.setText(rs.getString("vendor_id"));
+                ProdUnitMeasurement.setText(rs.getString("unit_measure"));
+                ProdDescription.setText(rs.getString("description"));
+            }
+//            con.close();
+        } catch (SQLException e) {
+            Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, e);
+        }
+
+    }//GEN-LAST:event_SearchKeyReleased
+
     public void SelectAllFromProd() {
         try {
             query = "SELECT * FROM products";
@@ -692,22 +786,44 @@ public class Product extends javax.swing.JFrame {
             RS = St.executeQuery(query);
             ProdTable.setModel(DbUtils.resultSetToTableModel(RS));
         } catch (SQLException ex) {
-            Logger.getLogger(Category.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
+//    Update comboBox
     private void GetCategories() {
         try {
-            MyConnection selectAll = new MyConnection();
-            con = selectAll.getRegisterConnection();
-            query = "SELECT * FROM categories";
-            RS = St.executeQuery(query);
-            while (Rs.next()) {
-                System.out.println(Res.getString());
-                String myCat = Rs.getString("categorie_id");
-                ProdCategory.addItem(myCat);
+            MyConnection selectC = new MyConnection();
+            con = selectC.getRegisterConnection();
+            query = "SELECT * FROM mry.categories";
+            ps = con.prepareStatement(query);
+            RS = ps.executeQuery();
+            while (RS.next()) {
+                ProdCategory.addItem("ID:" + RS.getString("id") + "   " + RS.getString("name"));
             }
-        } catch (Exception e) {
+
+        } catch (Exception ex) {
+            Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void GetStorage() {
+        try {
+            Statement StGS = null;
+            ResultSet RSGS = null;
+            PreparedStatement psGS = null;
+
+            MyConnection selectP = new MyConnection();
+            Connection con2 = selectP.getRegisterConnection();
+            String query2 = "SELECT * FROM mry.storage";
+            psGS = con.prepareStatement(query2);
+            RSGS = psGS.executeQuery();
+            while (RSGS.next()) {
+                ProdStorage.addItem("ID:" + RSGS.getString("id") + "   " + RSGS.getString("name"));
+            }
+
+        } catch (Exception ex) {
+            Logger.getLogger(Product.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -757,11 +873,12 @@ public class Product extends javax.swing.JFrame {
     private javax.swing.JTextField ProdName;
     private javax.swing.JTextField ProdPrice;
     private javax.swing.JTextField ProdQty;
-    private javax.swing.JTextField ProdSearch;
     private javax.swing.JComboBox<String> ProdStorage;
     private javax.swing.JTable ProdTable;
     private javax.swing.JTextField ProdUnitMeasurement;
     private javax.swing.JTextField ProdVendorID;
+    private javax.swing.JTextField Search;
+    private javax.swing.JButton SearchBtn;
     private javax.swing.JButton UpdateBtn;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
